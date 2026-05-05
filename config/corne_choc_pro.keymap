@@ -83,10 +83,10 @@
             //                    | GUI |     | SPC |               | ENT |     | ALT |
 
             bindings = <
-&kp TAB    &kp EXCL  &kp AT  &kp HASH  &kp DLLR  &kp PRCNT  &kp LCTRL  &kp RCTRL  &kp CARET  &kp AMPS   &kp ASTRK  &kp LPAR  &kp RPAR  &escOrShift BSPC LBKT
-&kp LCTRL  &trans    &trans  &trans    &trans    &trans     &kp LALT   &kp RALT   &kp MINUS  &kp EQUAL  &kp LBKT   &kp RBKT  &kp BSLH  &kp GRAVE
-&kp LSHFT  &trans    &trans  &trans    &trans    &trans                           &kp UNDER  &kp PLUS   &kp LBRC   &kp RBRC  &kp PIPE  &kp TILDE
-                             &kp LGUI  &trans    &kp SPACE                        &kp RET    &trans     &kp RALT
+&kp TAB    &kp EXCL  &kp RA(NUMBER_2)  &kp RA(NUMBER_4)  &kp DLLR  &kp PRCNT  &kp LCTRL  &kp RCTRL  &kp CARET     &kp AMPS      &kp RA(N8)  &kp RA(N9)  &kp RPAR   &kp RA(LBKT)
+&kp LCTRL  &trans    &trans            &trans            &trans    &trans     &kp LALT   &kp RALT   &kp RA(NUBS)  &kp EQUAL     &kp RA(N7)  &kp RA(N0)  &kp BSLH   &kp RA(MINUS)
+&kp LSHFT  &trans    &trans            &trans            &trans    &trans                           &kp NUBS      &kp LS(NUBS)  &kp LS(N8)  &kp LS(N9)  &kp SLASH  &kp LS(FSLH)
+                                       &kp LGUI          &trans    &kp SPACE                        &kp RET       &trans        &kp RALT
             >;
         };
 
