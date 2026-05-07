@@ -259,7 +259,7 @@
             bindings = <
   &trans  &trans           &trans             &trans            &trans     &trans        &trans  &rgb_ug RGB_HUD  &rgb_ug RGB_HUI  &trans           &trans           &rgb_ug RGB_TOG
   &trans  &studio_unlock   &ext_power EP_OFF  &ext_power EP_ON  &trans     &trans        &trans  &rgb_ug RGB_SAD  &rgb_ug RGB_SAI  &rgb_ug RGB_BRD  &rgb_ug RGB_BRI  &trans
-  &trans  &bt BT_CLR       &trans             &trans            &sw_mac    &sw_win       &trans  &rgb_ug RGB_EFD  &rgb_ug RGB_EFF  &trans           &trans           &trans
+  &trans  &bt BT_CLR       &trans             &trans            &trans     &trans       &trans  &rgb_ug RGB_EFD  &rgb_ug RGB_EFF  &trans           &trans           &trans
                                                &trans  &trans  &trans      &trans  &trans  &trans
             >;
         };
