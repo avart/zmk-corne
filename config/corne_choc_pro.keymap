@@ -92,7 +92,7 @@
   &kp TAB    &kp SE_Q       &kp SE_W       &kp SE_E        &kp SE_R        &kp SE_T      &kp SE_Y  &kp SE_U        &kp SE_I        &kp SE_O       &kp SE_P          &kp SE_ARNG
   &kp LCTRL  &mt LGUI SE_A  &mt LALT SE_S  &mt LSHFT SE_D  &mt LCTRL SE_F  &kp SE_G      &kp SE_H  &mt RCTRL SE_J  &mt RSHFT SE_K  &mt RALT SE_L  &mt RGUI SE_ODIA  &kp SE_ADIA
   &kp LSHFT  &kp SE_Z       &kp SE_X       &kp SE_C        &kp SE_V        &kp SE_B      &kp SE_N  &kp SE_M        &kp SE_COMM     &kp SE_DOT     &kp SE_MINS       &kp ESC
-                                            &lt SYS LGUI    &mo LOWER       &kp SPACE     &kp RET   &mo RAISE       &kp RALT
+                                            &lt SYS LGUI    &mo LOWER       &kp RET     &kp SPACE   &mo RAISE       &kp RALT
             >;
         };
 
