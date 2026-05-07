@@ -3,16 +3,21 @@
  * OS input language: Swedish (macOS + Windows)
  *
  * Requires: https://github.com/joelspadin/zmk-locales
- * Add to west.yml modules, then include locale/keys_se.h below.
  *
- * ⚠️  Mac ISO note: macOS swaps GRAVE and SE_LABK (NUBS) on ISO keyboards.
- *     If < and > produce wrong output on Mac, uncomment #define MAC_ISO below.
+ * BT profile 0 = Mac  → automatically activates MAC_OVRD layer
+ * BT profile 1 = Win  → automatically activates WIN_BASE layer (no overrides)
  *
- * Layer 0 — BASE     (default QWERTY + Swedish chars)
- * Layer 1 — LOWER    (numbers + symbols)
- * Layer 2 — RAISE    (nav + F-keys)
- * Layer 3 — CODE     (brackets, braces, coding symbols)
- * Layer 4 — SYSTEM   (BT, RGB, ZMK Studio) — hold GUI
+ * The only keys that differ between Mac and Windows Swedish ISO layout are
+ * the < > keys (NUBS / GRAVE swap on Mac ISO). All other keys are identical.
+ * MAC_OVRD is a sparse overlay layer: only those keys are defined, everything
+ * else falls through transparently.
+ *
+ * Layer 0 — WIN_BASE  QWERTY + Swedish chars + homerow mods  (Windows default)
+ * Layer 1 — LOWER     Numbers, symbols
+ * Layer 2 — RAISE     Nav + F-keys
+ * Layer 3 — CODE      Brackets, braces, coding symbols
+ * Layer 4 — SYSTEM    BT switch (with OS layer toggle), RGB, power
+ * Layer 5 — MAC_OVRD  Mac-specific key overrides (sparse, transparent otherwise)
  */
 
 #include <behaviors.dtsi>
@@ -22,33 +27,28 @@
 #include <dt-bindings/zmk/ext_power.h>
 #include <locale/keys_se.h>
 
-/* ── Mac ISO workaround ───────────────────────────────────────────────────────
- * On a Mac with an ISO layout, GRAVE and NUBS (SE_LABK) are swapped at the
- * hardware level. Uncomment the line below if < > produce § ½ and vice versa.
- */
-// #define MAC_ISO
-
-#ifdef MAC_ISO
-  #define SE_LABK_KEY  GRAVE       // < on Mac ISO
-  #define SE_RABK_KEY  LS(GRAVE)   // > on Mac ISO
-#else
-  #define SE_LABK_KEY  SE_LABK     // < standard (NUBS)
-  #define SE_RABK_KEY  SE_RABK     // > standard (LS(NUBS))
-#endif
-
 /* ── Layer indices ───────────────────────────────────────────────────────────*/
-#define BASE   0
-#define LOWER  1
-#define RAISE  2
-#define CODE   3
-#define SYS    4
+#define WIN_BASE  0
+#define LOWER     1
+#define RAISE     2
+#define CODE      3
+#define SYS       4
+#define MAC_OVRD  5
 
-/* ── Homerow mod timings ─────────────────────────────────────────────────────
- * Using "balanced" flavor: quick taps register the key, deliberate holds
- * register the modifier. Tweak tapping-term-ms to taste (200–280 ms).
- *
- * Left hand:  A=GUI  S=ALT  D=SHFT  F=CTRL
- * Right hand: J=CTRL K=SHFT L=ALT   Ö=GUI
+/* ── < > keycodes per OS ─────────────────────────────────────────────────────
+ * Windows/Linux: SE_LABK = NUBS,       SE_RABK = LS(NUBS)
+ * Mac ISO:       GRAVE swaps with NUBS at the hardware level, so:
+ *                MAC_LABK = GRAVE,      MAC_RABK = LS(GRAVE)
+ */
+#define WIN_LABK  SE_LABK
+#define WIN_RABK  SE_RABK
+#define MAC_LABK  GRAVE
+#define MAC_RABK  LS(GRAVE)
+
+/* ── Homerow mod behavior ────────────────────────────────────────────────────
+ * "balanced": quick taps = key, deliberate holds = modifier.
+ * Left:  A=GUI  S=ALT  D=SHFT  F=CTRL
+ * Right: J=CTRL K=SHFT L=ALT   Ö=GUI
  */
 &mt {
     flavor = "balanced";
@@ -60,22 +60,45 @@
 / {
 
     /* ── Combos ──────────────────────────────────────────────────────────────
-     * Hold LWR + RSE simultaneously → CODE layer
+     * LWR + RSE held together → CODE layer
      */
     combos {
         compatible = "zmk,combos";
-
         combo_code {
             timeout-ms = <50>;
-            key-positions = <37 40>; /* LWR (left thumb mid) + RSE (right thumb mid) */
+            key-positions = <37 40>;
             bindings = <&mo CODE>;
+        };
+    };
+
+    /* ── Macros ──────────────────────────────────────────────────────────────
+     * sw_mac: switch to BT profile 0 AND activate MAC_OVRD layer
+     * sw_win: switch to BT profile 1 AND deactivate MAC_OVRD (back to WIN_BASE)
+     *
+     * &to MAC_OVRD makes it the new "base" — all layers still work on top of it
+     * because MAC_OVRD is the highest-numbered layer and only overrides < >
+     *
+     * We use &df (default layer) instead of &to so momentary layers still work:
+     *   &df MAC_OVRD  sets MAC_OVRD as the persistent default layer
+     *   &df WIN_BASE  sets WIN_BASE as the persistent default layer
+     */
+    macros {
+        sw_mac: sw_mac {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&bt BT_SEL 0>, <&df MAC_OVRD>;
+        };
+        sw_win: sw_win {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&bt BT_SEL 1>, <&df WIN_BASE>;
         };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
-        /* ── Layer 0: BASE ───────────────────────────────────────────────────
+        /* ── Layer 0: WIN_BASE ───────────────────────────────────────────────
          *
          * ┌──────┬──────┬──────┬──────┬──────┬──────┐   ┌──────┬──────┬──────┬──────┬──────┬──────┐
          * │  TAB │  Q   │  W   │  E   │  R   │  T   │   │  Y   │  U   │  I   │  O   │  P   │  Å   │
@@ -84,15 +107,15 @@
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
          * │ SHFT │  Z   │  X   │  C   │  V   │  B   │   │  N   │  M   │  ,   │  .   │  -   │ ESC  │
          * └──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┴──────┴──────┴──────┘
-         *                      │lt SYS│ LWR  │ SPC  │   │ ENT  │ RSE  │ ALT  │
+         *                      │lt SYS│ LWR  │ RET  │   │ SPC  │ RSE  │ ALT  │
          *                      └──────┴──────┴──────┘   └──────┴──────┴──────┘
          */
-        base_layer {
+        win_base_layer {
             bindings = <
-  &kp TAB    &kp SE_Q       &kp SE_W       &kp SE_E        &kp SE_R        &kp SE_T      &kp SE_Y  &kp SE_U        &kp SE_I        &kp SE_O       &kp SE_P          &kp SE_ARNG
-  &kp LCTRL  &mt LGUI SE_A  &mt LALT SE_S  &mt LSHFT SE_D  &mt LCTRL SE_F  &kp SE_G      &kp SE_H  &mt RCTRL SE_J  &mt RSHFT SE_K  &mt RALT SE_L  &mt RGUI SE_ODIA  &kp SE_ADIA
-  &kp LSHFT  &kp SE_Z       &kp SE_X       &kp SE_C        &kp SE_V        &kp SE_B      &kp SE_N  &kp SE_M        &kp SE_COMM     &kp SE_DOT     &kp SE_MINS       &kp ESC
-                                            &lt SYS LGUI    &mo LOWER       &kp RET     &kp SPACE   &mo RAISE       &kp RALT
+  &kp TAB    &kp Q          &kp W          &kp E           &kp R           &kp T        &kp Y      &kp U           &kp I           &kp O          &kp P             &kp SE_ARNG
+  &kp LCTRL  &mt LGUI A     &mt LALT S     &mt LSHFT D     &mt LCTRL F     &kp G        &kp H      &mt RCTRL J     &mt RSHFT K     &mt RALT L     &mt RGUI SE_ODIA  &kp SE_ADIA
+  &kp LSHFT  &kp Z          &kp X          &kp C           &kp V           &kp B        &kp N      &kp M           &kp COMMA       &kp DOT        &kp SE_MINS       &kp ESC
+                                            &lt SYS LGUI    &mo LOWER       &kp RET      &kp SPACE  &mo RAISE       &kp RALT
             >;
         };
 
@@ -103,17 +126,17 @@
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
          * │ CTRL │  1   │  2   │  3   │  4   │  5   │   │  6   │  7   │  8   │  9   │  0   │  +   │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
-         * │ SHFT │      │  @   │      │  $   │      │   │      │      │  ;   │  :   │  _   │      │
+         * │ SHFT │  @   │  $   │  *   │  ?   │      │   │      │      │  ;   │  :   │  _   │      │
          * └──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┴──────┴──────┴──────┘
-         *                      │      │(held)│ SPC  │   │ ENT  │      │ ALT  │
+         *                      │      │(held)│ RET  │   │ SPC  │      │ ALT  │
          *                      └──────┴──────┴──────┘   └──────┴──────┴──────┘
          */
         lower_layer {
             bindings = <
   &trans     &kp SE_EXLM  &kp SE_DQUO  &kp SE_HASH  &kp SE_CURR  &kp SE_PERC      &kp SE_AMPR  &kp SE_SLSH  &kp SE_LPRN  &kp SE_RPRN  &kp SE_EQL   &kp BSPC
   &kp LCTRL  &kp SE_N1    &kp SE_N2    &kp SE_N3    &kp SE_N4    &kp SE_N5        &kp SE_N6    &kp SE_N7    &kp SE_N8    &kp SE_N9    &kp SE_N0    &kp SE_PLUS
-  &kp LSHFT  &trans       &kp SE_AT    &trans       &kp SE_DLR   &trans           &trans       &trans       &kp SE_SCLN  &kp SE_COLN  &kp SE_UNDS  &trans
-                                            &trans  &trans  &kp SPACE      &kp RET  &trans  &kp RALT
+  &kp LSHFT  &kp SE_AT    &kp SE_DLR   &kp SE_ASTR  &kp SE_QUES  &trans           &trans       &trans       &kp SE_SCLN  &kp SE_COLN  &kp SE_UNDS  &trans
+                                            &trans  &trans  &kp RET      &kp SPACE  &trans  &kp RALT
             >;
         };
 
@@ -126,7 +149,7 @@
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
          * │ SHFT │      │      │      │      │      │   │ HOME │ PGDN │ PGUP │ END  │      │ BKSP │
          * └──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┴──────┴──────┴──────┘
-         *                      │      │      │ SPC  │   │ ENT  │(held)│ ALT  │
+         *                      │      │      │ RET  │   │ SPC  │(held)│ ALT  │
          *                      └──────┴──────┴──────┘   └──────┴──────┴──────┘
          */
         raise_layer {
@@ -134,7 +157,7 @@
   &trans     &kp F1   &kp F2   &kp F3  &kp F4  &kp F5      &kp F6    &kp F7     &kp F8     &kp F9     &kp F10  &kp DEL
   &kp LCTRL  &kp F11  &kp F12  &trans  &trans  &trans      &kp LEFT  &kp DOWN   &kp UP     &kp RIGHT  &trans   &trans
   &kp LSHFT  &trans   &trans   &trans  &trans  &trans      &kp HOME  &kp PG_DN  &kp PG_UP  &kp END    &trans   &kp BSPC
-                                &trans  &trans  &kp SPACE      &kp RET  &trans  &kp RALT
+                                &trans  &trans  &kp RET     &kp SPACE  &trans  &kp RALT
             >;
         };
 
@@ -144,21 +167,21 @@
          * ┌──────┬──────┬──────┬──────┬──────┬──────┐   ┌──────┬──────┬──────┬──────┬──────┬──────┐
          * │  `   │      │      │      │      │      │   │      │  [   │  ]   │      │      │  ~   │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
-         * │      │  @   │  $   │      │      │      │   │  |   │  {   │  }   │      │      │  \   │
+         * │      │  @   │  $   │  *   │  ?   │      │   │  |   │  {   │  }   │      │      │  \   │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
          * │      │      │      │      │      │      │   │      │  (   │  )   │  <   │  >   │      │
          * └──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┴──────┴──────┴──────┘
          *                      │      │(held)│      │   │      │(held)│      │
          *                      └──────┴──────┴──────┘   └──────┴──────┴──────┘
          *
-         * ⚠️  SE_LABK / SE_RABK: see MAC_ISO note at the top of this file.
+         * < > use WIN keycodes here. On Mac, MAC_OVRD layer overrides them.
          */
         code_layer {
             bindings = <
-  &kp SE_GRV  &trans      &trans      &trans  &trans    &trans      &trans       &kp SE_LBRC  &kp SE_RBRC  &trans           &trans           &kp SE_TILD
-  &trans      &kp SE_AT   &kp SE_DLR  &trans  &trans    &trans      &kp SE_PIPE  &kp SE_LCBR  &kp SE_RCBR  &trans           &trans           &kp SE_BSLS
-  &trans      &trans      &trans      &trans  &trans    &trans      &trans       &kp SE_LPRN  &kp SE_RPRN  &kp SE_LABK_KEY  &kp SE_RABK_KEY  &trans
-                                       &trans  &mo CODE  &trans      &trans  &mo CODE  &trans
+  &kp SE_GRV  &trans      &trans      &trans       &trans       &trans      &trans       &kp SE_LBRC  &kp SE_RBRC  &trans         &trans        &kp SE_TILD
+  &trans      &kp SE_AT   &kp SE_DLR  &kp SE_ASTR  &kp SE_QUES  &trans      &kp SE_PIPE  &kp SE_LCBR  &kp SE_RCBR  &trans         &trans        &kp SE_BSLS
+  &trans      &trans      &trans      &trans       &trans       &trans      &trans       &kp SE_LPRN  &kp SE_RPRN  &kp WIN_LABK   &kp WIN_RABK  &trans
+                                       &trans  &mo CODE  &kp RET     &kp SPACE  &mo CODE  &trans
             >;
         };
 
@@ -166,21 +189,67 @@
          * Activated by holding GUI (left thumb).
          *
          * ┌──────┬──────┬──────┬──────┬──────┬──────┐   ┌──────┬──────┬──────┬──────┬──────┬──────┐
-         * │      │      │      │      │      │      │   │      │      │      │      │      │      │
+         * │      │      │      │      │      │      │   │      │RGB H-│RGB H+│      │      │RGBTOG│
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
-         * │      │UNLOCK│      │      │      │      │   │      │ BT 0 │ BT 1 │      │      │ RGB  │
+         * │      │UNLOCK│EP OFF│EP ON │      │      │   │      │RGB S-│RGB S+│RGB B-│RGB B+│      │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
-         * │      │      │      │      │      │      │   │      │      │      │      │      │BTCLR │
+         * │      │BTCLR │      │      │sw_mac│sw_win│   │      │EFF-  │EFF+  │      │      │      │
          * └──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┴──────┴──────┴──────┘
          *                      │(held)│      │      │   │      │      │      │
          *                      └──────┴──────┴──────┘   └──────┴──────┴──────┘
+         *
+         * sw_mac = BT_SEL 0 + switch to Mac mode  (profile 0 = Mac)
+         * sw_win = BT_SEL 1 + switch to Win mode  (profile 1 = Windows)
          */
         sys_layer {
             bindings = <
-  &trans  &trans          &trans  &trans  &trans  &trans      &trans  &trans        &trans        &trans  &trans  &trans
-  &trans  &studio_unlock  &trans  &trans  &trans  &trans      &trans  &bt BT_SEL 0  &bt BT_SEL 1  &trans  &trans  &rgb_ug RGB_TOG
-  &trans  &trans          &trans  &trans  &trans  &trans      &trans  &trans        &trans        &trans  &trans  &bt BT_CLR
-                                   &trans  &trans  &trans      &trans  &trans  &trans
+  &trans  &trans           &trans            &trans           &trans     &trans        &trans  &rgb_ug RGB_HUD  &rgb_ug RGB_HUI  &trans           &trans           &rgb_ug RGB_TOG
+  &trans  &studio_unlock   &ext_power EP_OFF  &ext_power EP_ON  &trans    &trans        &trans  &rgb_ug RGB_SAD  &rgb_ug RGB_SAI  &rgb_ug RGB_BRD  &rgb_ug RGB_BRI  &trans
+  &trans  &bt BT_CLR       &trans            &trans           &sw_mac    &sw_win       &trans  &rgb_ug RGB_EFD  &rgb_ug RGB_EFF  &trans           &trans           &trans
+                                              &trans  &trans  &trans      &trans  &trans  &trans
+            >;
+        };
+
+        /* ── Layer 5: MAC_OVRD ───────────────────────────────────────────────
+         * Activated by sw_mac macro (BT profile 0).
+         * Deactivated by sw_win macro (returns to WIN_BASE as default).
+         *
+         * This is a SPARSE layer — only the keys that differ on Mac ISO are
+         * defined. Everything else is &trans, falling through to WIN_BASE.
+         *
+         * The only difference between Swedish Mac ISO and Windows ISO is the
+         * < > key pair: Mac swaps GRAVE and NUBS at the hardware level.
+         *
+         * BASE layer < > positions: bottom row cols 9+10 (key indices 33, 34)
+         * CODE layer < > positions: same physical keys, overridden below too.
+         *
+         * ┌──────┬──────┬──────┬──────┬──────┬──────┐   ┌──────┬──────┬──────┬──────┬──────┬──────┐
+         * │      │      │      │      │      │      │   │      │      │      │      │      │      │
+         * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
+         * │      │      │      │      │      │      │   │      │      │      │      │      │      │
+         * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
+         * │      │      │      │      │      │      │   │      │      │      │MAC < │MAC > │      │
+         * └──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┴──────┴──────┴──────┘
+         *                      │      │      │      │   │      │      │      │
+         *                      └──────┴──────┴──────┘   └──────┴──────┴──────┘
+         *
+         * Note: The CODE layer's < > also need Mac overrides. Since CODE is
+         * activated via &mo (momentary), it sits above MAC_OVRD in the stack.
+         * MAC_OVRD cannot override CODE layer keys — so < > in CODE are handled
+         * by checking which default layer is active. The simplest fix is to
+         * duplicate the CODE layer into a MAC_CODE layer triggered by the same
+         * LWR+RSE combo when MAC_OVRD is the default. However, ZMK combos are
+         * not default-layer-aware. The practical workaround: if you use Mac and
+         * need < > in the CODE layer, use LOWER+RAISE to reach this base layer's
+         * < > keys on the bottom row, or add a second combo for mac_code.
+         * For most users the bottom-row < > (this layer) are sufficient.
+         */
+        mac_ovrd_layer {
+            bindings = <
+  &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans         &trans        &trans
+  &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans         &trans        &trans
+  &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &kp MAC_LABK   &kp MAC_RABK  &trans
+                           &trans  &trans  &trans      &trans  &trans  &trans
             >;
         };
 
