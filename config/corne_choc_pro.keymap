@@ -13,8 +13,8 @@
  * else falls through transparently.
  *
  * Layer 0 — WIN_BASE  QWERTY + Swedish chars + homerow mods  (Windows default)
- * Layer 1 — LOWER     Numbers, symbols
- * Layer 2 — RAISE     Nav + F-keys
+ * Layer 1 — LOWER     Numbers + F-key holds
+ * Layer 2 — RAISE     Nav + symbols
  * Layer 3 — CODE      Brackets, braces, coding symbols
  * Layer 4 — SYSTEM    BT switch (with OS layer toggle), RGB, power
  * Layer 5 — MAC_OVRD  Mac-specific key overrides (sparse, transparent otherwise)
@@ -59,6 +59,18 @@
 
 / {
 
+    behaviors {
+        fht: function_hold_tap {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <220>;
+            quick-tap-ms = <150>;
+            bindings = <&kp>, <&kp>;
+            display-name = "Function Hold-Tap";
+        };
+    };
+
     /* ── Combos ──────────────────────────────────────────────────────────────
      * LWR + RSE held together → CODE layer
      */
@@ -101,13 +113,13 @@
         /* ── Layer 0: WIN_BASE ───────────────────────────────────────────────
          *
          * ┌──────┬──────┬──────┬──────┬──────┬──────┐   ┌──────┬──────┬──────┬──────┬──────┬──────┐
-         * │  TAB │  Q   │  W   │  E   │  R   │  T   │   │  Y   │  U   │  I   │  O   │  P   │  Å   │
+         * │  TAB │  Q   │  W   │  E   │  R   │  T   │   │  Y   │  U   │  I   │  O   │  P   │ BKSP │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
          * │ CTRL │GUI/A │ALT/S │SHF/D │CTL/F │  G   │   │  H   │CTL/J │SHF/K │ALT/L │GUI/Ö │  Ä   │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
          * │ SHFT │  Z   │  X   │  C   │  V   │  B   │   │  N   │  M   │  ,   │  .   │  -   │ ESC  │
          * └──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┴──────┴──────┴──────┘
-         *                      │lt SYS│ LWR  │ RET  │   │ SPC  │ RSE  │ ALT  │
+         *                      │lt SYS│ LWR  │ SPC  │   │ RET  │ RSE  │ ALT  │
          *                      └──────┴──────┴──────┘   └──────┴──────┴──────┘
          */
         win_base_layer {
@@ -115,11 +127,14 @@
   &kp TAB    &kp Q          &kp W          &kp E           &kp R           &kp T        &trans     &trans     &kp Y      &kp U           &kp I           &kp O          &kp P                  &kp BSPC
   &kp LCTRL  &mt LGUI A     &mt LALT S     &mt LSHFT D     &mt LCTRL F     &kp G        &trans     &trans     &kp H      &mt RCTRL J     &mt RSHFT K     &mt RALT L     &mt RGUI SE_O_UMLAUT   &kp SE_A_UMLAUT
   &kp LSHFT  &kp Z          &kp X          &kp C           &kp V           &kp B                                &kp N      &kp M           &kp COMMA       &kp DOT        &kp SE_MINUS            &kp ESC
-                                                              &lt SYS LGUI    &mo LOWER    &kp RET                             &kp SPACE  &mo RAISE       &kp RALT
+                                                              &lt SYS LGUI    &mo LOWER    &kp SPACE                           &kp RET    &mo RAISE       &kp RALT
             >;
         };
 
         /* ── Layer 1: LOWER ──────────────────────────────────────────────────
+         *
+         * Tap for symbols/numbers. Hold the top row for F1-F10, and hold
+         * the 1/2 keys for F11/F12.
          *
          * ┌──────┬──────┬──────┬──────┬──────┬──────┐   ┌──────┬──────┬──────┬──────┬──────┬──────┐
          * │      │  !   │  "   │  #   │  ¤   │  %   │   │  &   │  /   │  (   │  )   │  =   │ BKSP │
@@ -128,36 +143,36 @@
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
          * │ SHFT │  @   │  $   │  *   │  ?   │      │   │      │      │  ;   │  :   │  _   │      │
          * └──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┴──────┴──────┴──────┘
-         *                      │      │(held)│ RET  │   │ SPC  │      │ ALT  │
+         *                      │      │(held)│ SPC  │   │ RET  │      │ ALT  │
          *                      └──────┴──────┴──────┘   └──────┴──────┴──────┘
          */
         lower_layer {
             bindings = <
-  &trans     &kp SE_N1    &kp SE_N2     &kp SE_N3     &kp SE_N4     &kp SE_N5           &trans     &trans     &kp SE_N6    &kp SE_N7    &kp SE_N8    &kp SE_N9    &kp SE_N0              &kp SE_A_RING
-  &kp LCTRL  &bt BT_SEL 0 &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4       &trans     &trans     &kp LEFT     &kp DOWN     &kp UP       &kp RIGHT    &trans                  &trans
-  &kp LSHFT  &bt BT_CLR   &rgb_ug RGB_TOG &sys_reset  &bootloader    &studio_unlock                           &trans       &trans       &trans       &trans       &trans                  &trans
-                                                              &trans         &trans        &kp RET                             &kp SPACE  &trans          &kp RALT
+  &trans     &fht F1 SE_EXCL  &fht F2 SE_DQT  &fht F3 SE_HASH  &fht F4 SE_CURREN  &fht F5 SE_PRCNT   &trans     &trans     &fht F6 SE_AMPS  &fht F7 SE_FSLH  &fht F8 SE_LPAR  &fht F9 SE_RPAR  &fht F10 SE_EQUAL      &kp BSPC
+  &kp LCTRL  &fht F11 SE_N1   &fht F12 SE_N2  &kp SE_N3        &kp SE_N4          &kp SE_N5          &trans     &trans     &kp SE_N6        &kp SE_N7        &kp SE_N8       &kp SE_N9        &kp SE_N0              &kp SE_PLUS
+  &kp LSHFT  &kp SE_AT    &kp SE_DLLR  &kp SE_ASTRK &kp SE_QMARK   &trans                                   &trans       &trans       &kp SE_SEMI  &kp SE_COLON &kp SE_UNDER           &trans
+                                                              &trans       &trans        &kp SPACE                           &kp RET    &trans          &kp RALT
             >;
         };
 
         /* ── Layer 2: RAISE ──────────────────────────────────────────────────
          *
          * ┌──────┬──────┬──────┬──────┬──────┬──────┐   ┌──────┬──────┬──────┬──────┬──────┬──────┐
-         * │      │  F1  │  F2  │  F3  │  F4  │  F5  │   │  F6  │  F7  │  F8  │  F9  │ F10  │ DEL  │
+         * │      │  !   │  "   │  #   │  ¤   │  %   │   │  ^   │  &   │  *   │  (   │  )   │  Å   │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
-         * │ CTRL │ F11  │ F12  │      │      │      │   │ LEFT │ DOWN │  UP  │RIGHT │      │      │
+         * │ CTRL │  @   │  $   │  ?   │  /   │      │   │  ←   │  ↓   │  ↑   │  →   │  \   │  `   │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
-         * │ SHFT │      │      │      │      │      │   │ HOME │ PGDN │ PGUP │ END  │      │ BKSP │
+         * │ SHFT │      │      │      │      │      │   │  _   │  +   │  {   │  }   │  |   │  ~   │
          * └──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┴──────┴──────┴──────┘
-         *                      │      │      │ RET  │   │ SPC  │(held)│ ALT  │
+         *                      │      │      │ SPC  │   │ RET  │(held)│ ALT  │
          *                      └──────┴──────┴──────┘   └──────┴──────┴──────┘
          */
         raise_layer {
             bindings = <
   &trans     &kp SE_EXCL  &kp SE_DQT   &kp SE_HASH   &kp SE_CURREN  &kp SE_PRCNT      &trans     &trans     &kp SE_CARET  &kp SE_AMPS  &kp SE_ASTRK  &kp SE_LPAR  &kp SE_RPAR          &kp SE_A_RING
-  &kp LCTRL  &kp SE_AT    &kp SE_DLLR  &kp SE_QMARK  &kp SE_FSLH    &trans            &trans     &trans     &kp SE_MINUS  &kp SE_EQUAL &kp SE_LBKT   &kp SE_RBKT  &kp SE_BSLH          &kp SE_GRAVE
+  &kp LCTRL  &kp SE_AT    &kp SE_DLLR  &kp SE_QMARK  &kp SE_FSLH    &trans            &trans     &trans     &kp LEFT      &kp DOWN     &kp UP        &kp RIGHT    &kp SE_BSLH          &kp SE_GRAVE
   &kp LSHFT  &trans       &trans       &trans        &trans         &trans                                    &kp SE_UNDER  &kp SE_PLUS  &kp SE_LBRC   &kp SE_RBRC  &kp SE_PIPE          &kp SE_TILDE
-                                                              &trans         &trans        &kp RET                             &kp SPACE  &trans             &kp RALT
+                                                              &trans       &trans        &kp SPACE                           &kp RET    &trans             &kp RALT
             >;
         };
 
@@ -167,7 +182,7 @@
          * ┌──────┬──────┬──────┬──────┬──────┬──────┐   ┌──────┬──────┬──────┬──────┬──────┬──────┐
          * │  `   │      │      │      │      │      │   │      │  [   │  ]   │      │      │  ~   │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
-         * │      │  @   │  $   │  *   │  ?   │      │   │  |   │  {   │  }   │      │      │  \   │
+         * │      │  @   │  $   │  *   │  ?   │  `   │   │  |   │  {   │  }   │      │      │  \   │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
          * │      │      │      │      │      │      │   │      │  (   │  )   │  <   │  >   │      │
          * └──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┴──────┴──────┴──────┘
@@ -179,9 +194,9 @@
         code_layer {
             bindings = <
   &kp SE_GRAVE  &trans      &trans       &trans        &trans        &trans      &trans     &trans     &kp SE_LBKT  &kp SE_RBKT  &trans         &trans        &kp SE_TILDE       &trans
-  &trans        &kp SE_AT   &kp SE_DLLR  &kp SE_ASTRK  &kp SE_QMARK  &trans      &trans     &trans     &kp SE_PIPE  &kp SE_LBRC  &kp SE_RBRC   &trans        &trans             &kp SE_BSLH
+  &trans        &kp SE_AT   &kp SE_DLLR  &kp SE_ASTRK  &kp SE_QMARK  &kp SE_GRAVE      &trans     &trans     &kp SE_PIPE  &kp SE_LBRC  &kp SE_RBRC   &trans        &trans             &kp SE_BSLH
   &trans        &trans      &trans       &trans        &trans        &trans                                &trans       &kp SE_LPAR  &kp SE_RPAR   &kp WIN_LT    &kp WIN_GT         &trans
-                                                                &trans        &mo CODE      &kp RET                           &kp SPACE  &mo CODE           &trans
+                                                                &trans        &mo CODE      &kp SPACE                         &kp RET    &mo CODE           &trans
             >;
         };
 
@@ -204,7 +219,7 @@
         sys_layer {
             bindings = <
   &trans  &trans           &trans             &trans             &trans     &trans        &trans     &trans     &rgb_ug RGB_HUD  &rgb_ug RGB_HUI  &trans           &trans           &rgb_ug RGB_TOG    &trans
-  &trans  &studio_unlock   &ext_power EP_OFF  &ext_power EP_ON   &trans     &trans        &trans     &trans     &trans           &rgb_ug RGB_SAD  &rgb_ug RGB_SAI  &rgb_ug RGB_BRD  &rgb_ug RGB_BRI    &trans
+  &trans  &studio_unlock   &ext_power EP_OFF  &ext_power EP_ON   &trans     &trans        &trans     &trans     &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4       &trans
   &trans  &bt BT_CLR       &trans             &trans             &sw_mac    &sw_win                              &trans           &rgb_ug RGB_EFR  &rgb_ug RGB_EFF  &trans           &trans             &trans
                                                                 &trans      &trans        &trans                           &trans           &trans             &trans
             >;
