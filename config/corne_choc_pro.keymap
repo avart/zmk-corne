@@ -1,4 +1,4 @@
-/*
+successfully downloaded text file (SHA: 741f0c8e0f6f4f795665071f580990b7d0c57399)/*
  * Keebart Corne Pro BT — ZMK Keymap
  * OS input language: Swedish (macOS + Windows)
  *
@@ -25,7 +25,7 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/rgb.h>
 #include <dt-bindings/zmk/ext_power.h>
-#include <locale/keys_se.h>
+#include <locale/keys_sv.h>
 
 /* ── Layer indices ───────────────────────────────────────────────────────────*/
 #define WIN_BASE  0
@@ -36,12 +36,12 @@
 #define MAC_OVRD  5
 
 /* ── < > keycodes per OS ─────────────────────────────────────────────────────
- * Windows/Linux: SE_LT = NUBS,       SE_GT = LS(NUBS)
+ * Windows/Linux: SV_LT = NUBS,       SV_GT = LS(NUBS)
  * Mac ISO:       GRAVE swaps with NUBS at the hardware level, so:
  *                MAC_LT = GRAVE,      MAC_GT = LS(GRAVE)
  */
-#define WIN_LT   SE_LT
-#define WIN_GT   SE_GT
+#define WIN_LT   SV_LT
+#define WIN_GT   SV_GT
 #define MAC_LT   GRAVE
 #define MAC_GT   LS(GRAVE)
 
@@ -125,9 +125,9 @@
         win_base_layer {
             bindings = <
   &kp TAB    &kp Q          &kp W          &kp E           &kp R           &kp T        &trans     &trans     &kp Y      &kp U           &kp I           &kp O          &kp P                  &kp BSPC
-  &kp LCTRL  &mt LGUI A     &mt LALT S     &mt LSHFT D     &mt LCTRL F     &kp G        &trans     &trans     &kp H      &mt RCTRL J     &mt RSHFT K     &mt RALT L     &mt RGUI SE_O_UMLAUT   &kp SE_A_UMLAUT
-  &kp LSHFT  &kp Z          &kp X          &kp C           &kp V           &kp B                                &kp N      &kp M           &kp COMMA       &kp DOT        &kp SE_MINUS            &kp ESC
-                                                              &lt SYS LGUI    &mo LOWER    &kp SPACE                           &kp RET    &mo RAISE       &kp RALT
+  &kp LCTRL  &mt LGUI A     &mt LALT S     &mt LSHFT D     &mt LCTRL F     &kp G        &trans     &trans     &kp H      &mt RCTRL J     &mt RSHFT K     &mt RALT L     &mt RGUI SV_O_UMLAUT   &kp SV_A_UMLAUT
+  &kp LSHFT  &kp Z          &kp X          &kp C           &kp V           &kp B                                &kp N      &kp M           &kp COMMA       &kp DOT        &kp SV_MINUS            &kp ESC
+                                                              &lt SYS LGUI    &mo LOWER    &kp RET                             &kp SPACE  &mo RAISE       &kp RALT
             >;
         };
 
@@ -143,15 +143,15 @@
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
          * │ SHFT │  @   │  $   │  *   │  ?   │      │   │      │      │  ;   │  :   │  _   │      │
          * └──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┴──────┴──────┴──────┘
-         *                      │      │(held)│ SPC  │   │ RET  │      │ ALT  │
+         *                      │      │(held)│ RET  │   │ SPC  │      │ ALT  │
          *                      └──────┴──────┴──────┘   └──────┴──────┴──────┘
          */
         lower_layer {
             bindings = <
-  &trans     &fht F1 SE_EXCL  &fht F2 SE_DQT  &fht F3 SE_HASH  &fht F4 SE_CURREN  &fht F5 SE_PRCNT   &trans     &trans     &fht F6 SE_AMPS  &fht F7 SE_FSLH  &fht F8 SE_LPAR  &fht F9 SE_RPAR  &fht F10 SE_EQUAL      &kp BSPC
-  &kp LCTRL  &fht F11 SE_N1   &fht F12 SE_N2  &kp SE_N3        &kp SE_N4          &kp SE_N5          &trans     &trans     &kp SE_N6        &kp SE_N7        &kp SE_N8       &kp SE_N9        &kp SE_N0              &kp SE_PLUS
-  &kp LSHFT  &kp SE_AT    &kp SE_DLLR  &kp SE_ASTRK &kp SE_QMARK   &trans                                   &trans       &trans       &kp SE_SEMI  &kp SE_COLON &kp SE_UNDER           &trans
-                                                              &trans       &trans        &kp SPACE                           &kp RET    &trans          &kp RALT
+  &trans     &fht F1 SV_EXCL  &fht F2 SV_DQT  &fht F3 SV_HASH  &fht F4 SV_CURREN  &fht F5 SV_PRCNT   &trans     &trans     &fht F6 SV_AMPS  &fht F7 SV_FSLH  &fht F8 SV_LPAR  &fht F9 SV_RPAR  &fht F10 SV_EQUAL      &kp SV_A_RING
+  &kp LCTRL  &fht F11 SV_N1   &fht F12 SV_N2  &kp SV_N3        &kp SV_N4          &kp SV_N5          &trans     &trans     &kp SV_N6        &kp SV_N7        &kp SV_N8       &kp SV_N9        &kp SV_N0              &kp SV_PLUS
+  &kp LSHFT  &kp SV_AT    &kp SV_DLLR  &kp SV_ASTRK &kp SV_QMARK   &trans                                   &trans       &trans       &kp SV_SEMI  &kp SV_COLON &kp SV_UNDER           &trans
+                                                              &trans       &trans        &kp RET                             &kp SPACE  &trans          &kp RALT
             >;
         };
 
@@ -164,15 +164,15 @@
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
          * │ SHFT │      │      │      │      │      │   │  _   │  +   │  {   │  }   │  |   │  ~   │
          * └──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┴──────┴──────┴──────┘
-         *                      │      │      │ SPC  │   │ RET  │(held)│ ALT  │
+         *                      │      │      │ RET  │   │ SPC  │(held)│ ALT  │
          *                      └──────┴──────┴──────┘   └──────┴──────┴──────┘
          */
         raise_layer {
             bindings = <
-  &trans     &kp SE_EXCL  &kp SE_DQT   &kp SE_HASH   &kp SE_CURREN  &kp SE_PRCNT      &trans     &trans     &kp SE_CARET  &kp SE_AMPS  &kp SE_ASTRK  &kp SE_LPAR  &kp SE_RPAR          &kp SE_A_RING
-  &kp LCTRL  &kp SE_AT    &kp SE_DLLR  &kp SE_QMARK  &kp SE_FSLH    &trans            &trans     &trans     &kp LEFT      &kp DOWN     &kp UP        &kp RIGHT    &kp SE_BSLH          &kp SE_GRAVE
-  &kp LSHFT  &trans       &trans       &trans        &trans         &trans                                    &kp SE_UNDER  &kp SE_PLUS  &kp SE_LBRC   &kp SE_RBRC  &kp SE_PIPE          &kp SE_TILDE
-                                                              &trans       &trans        &kp SPACE                           &kp RET    &trans             &kp RALT
+  &trans     &kp SV_EXCL  &kp SV_DQT   &kp SV_HASH   &kp SV_CURREN  &kp SV_PRCNT      &trans     &trans     &kp SV_CARET  &kp SV_AMPS  &kp SV_ASTRK  &kp SV_LPAR  &kp SV_RPAR          &kp SV_A_RING
+  &kp LCTRL  &kp SV_AT    &kp SV_DLLR  &kp SV_QMARK  &kp SV_FSLH    &trans            &trans     &trans     &kp LEFT      &kp DOWN     &kp UP        &kp RIGHT    &kp SV_BSLH          &kp SV_GRAVE
+  &kp LSHFT  &trans       &trans       &trans        &trans         &trans                                    &kp SV_UNDER  &kp SV_PLUS  &kp SV_LBRC   &kp SV_RBRC  &kp SV_PIPE          &kp SV_TILDE
+                                                              &trans       &trans        &kp RET                             &kp SPACE  &trans             &kp RALT
             >;
         };
 
@@ -193,10 +193,10 @@
          */
         code_layer {
             bindings = <
-  &kp SE_GRAVE  &trans      &trans       &trans        &trans        &trans      &trans     &trans     &kp SE_LBKT  &kp SE_RBKT  &trans         &trans        &kp SE_TILDE       &trans
-  &trans        &kp SE_AT   &kp SE_DLLR  &kp SE_ASTRK  &kp SE_QMARK  &kp SE_GRAVE      &trans     &trans     &kp SE_PIPE  &kp SE_LBRC  &kp SE_RBRC   &trans        &trans             &kp SE_BSLH
-  &trans        &trans      &trans       &trans        &trans        &trans                                &trans       &kp SE_LPAR  &kp SE_RPAR   &kp WIN_LT    &kp WIN_GT         &trans
-                                                                &trans        &mo CODE      &kp SPACE                         &kp RET    &mo CODE           &trans
+  &kp SV_GRAVE  &trans      &trans       &trans        &trans        &trans      &trans     &trans     &kp SV_LBKT  &kp SV_RBKT  &trans         &trans        &kp SV_TILDE       &trans
+  &trans        &kp SV_AT   &kp SV_DLLR  &kp SV_ASTRK  &kp SV_QMARK  &kp SV_GRAVE      &trans     &trans     &kp SV_PIPE  &kp SV_LBRC  &kp SV_RBRC   &trans        &trans             &kp SV_BSLH
+  &trans        &trans      &trans       &trans        &trans        &trans                                &trans       &kp SV_LPAR  &kp SV_RPAR   &kp WIN_LT    &kp WIN_GT         &trans
+                                                                &trans        &mo CODE      &kp RET                           &kp SPACE  &mo CODE           &trans
             >;
         };
 
