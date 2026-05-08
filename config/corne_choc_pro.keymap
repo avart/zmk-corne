@@ -40,7 +40,10 @@
  * Mac ISO:       GRAVE swaps with NUBS at the hardware level, so:
  *                MAC_LT = GRAVE,      MAC_GT = LS(GRAVE)
  */
-/* Windows/Linux: SE_LT = NUBS,        SE_GT = LS(NUBS)\n * Mac ISO:       GRAVE swaps with NUBS at the hardware level, so:\n *                MAC_LT = GRAVE,       MAC_GT = LS(GRAVE)\n */\n#define WIN_LT   SE_LT\n#define WIN_GT   SE_GT\n#define MAC_LT   GRAVE\n#define MAC_GT   LS(GRAVE)
+#define WIN_LT   SE_LT
+#define WIN_GT   SE_GT
+#define MAC_LT   GRAVE
+#define MAC_GT   LS(GRAVE)
 
 /* ── Homerow mod behavior ────────────────────────────────────────────────────
  * "balanced": quick taps = key, deliberate holds = modifier.
