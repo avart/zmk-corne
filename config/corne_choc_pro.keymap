@@ -36,14 +36,11 @@
 #define MAC_OVRD  5
 
 /* ── < > keycodes per OS ─────────────────────────────────────────────────────
- * Windows/Linux: SE_LABK = NUBS,       SE_RABK = LS(NUBS)
+ * Windows/Linux: SE_LT = NUBS,       SE_GT = LS(NUBS)
  * Mac ISO:       GRAVE swaps with NUBS at the hardware level, so:
- *                MAC_LABK = GRAVE,      MAC_RABK = LS(GRAVE)
+ *                MAC_LT = GRAVE,      MAC_GT = LS(GRAVE)
  */
-#define WIN_LABK  SE_LABK
-#define WIN_RABK  SE_RABK
-#define MAC_LABK  GRAVE
-#define MAC_RABK  LS(GRAVE)
+/* Windows/Linux: SE_LT = NUBS,        SE_GT = LS(NUBS)\n * Mac ISO:       GRAVE swaps with NUBS at the hardware level, so:\n *                MAC_LT = GRAVE,       MAC_GT = LS(GRAVE)\n */\n#define WIN_LT   SE_LT\n#define WIN_GT   SE_GT\n#define MAC_LT   GRAVE\n#define MAC_GT   LS(GRAVE)
 
 /* ── Homerow mod behavior ────────────────────────────────────────────────────
  * "balanced": quick taps = key, deliberate holds = modifier.
@@ -86,12 +83,12 @@
         sw_mac: sw_mac {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&bt BT_SEL 0>, <&df MAC_OVRD>;
+            bindings = <&bt BT_SEL 0>, <&to WIN_BASE>, <&tog MAC_OVRD>;
         };
         sw_win: sw_win {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&bt BT_SEL 1>, <&df WIN_BASE>;
+            bindings = <&bt BT_SEL 1>, <&to WIN_BASE>;
         };
     };
 
@@ -112,9 +109,9 @@
          */
         win_base_layer {
             bindings = <
-  &kp TAB    &kp Q          &kp W          &kp E           &kp R           &kp T        &kp Y      &kp U           &kp I           &kp O          &kp P             &kp SE_A_RIRNG
-  &kp LCTRL  &mt LGUI A     &mt LALT S     &mt LSHFT D     &mt LCTRL F     &kp G        &kp H      &mt RCTRL J     &mt RSHFT K     &mt RALT L     &mt RGUI SE_ODIA  &kp SE_ADIA
-  &kp LSHFT  &kp Z          &kp X          &kp C           &kp V           &kp B        &kp N      &kp M           &kp COMMA       &kp DOT        &kp SE_MINS       &kp ESC
+  &kp TAB    &kp Q          &kp W          &kp E           &kp R           &kp T        &kp Y      &kp U           &kp I           &kp O          &kp P             &kp SE_A_RING
+  &kp LCTRL  &mt LGUI A     &mt LALT S     &mt LSHFT D     &mt LCTRL F     &kp G        &kp H      &mt RCTRL J     &mt RSHFT K     &mt RALT L     &mt RGUI SE_O_UMLAUT  &kp SE_A_UMLAUT
+  &kp LSHFT  &kp Z          &kp X          &kp C           &kp V           &kp B        &kp N      &kp M           &kp COMMA       &kp DOT        &kp SE_MINUS       &kp ESC
                                             &lt SYS LGUI    &mo LOWER       &kp RET      &kp SPACE  &mo RAISE       &kp RALT
             >;
         };
@@ -133,9 +130,9 @@
          */
         lower_layer {
             bindings = <
-  &trans     &kp SE_EXLM  &kp SE_DQUO  &kp SE_HASH  &kp SE_CURR  &kp SE_PERC      &kp SE_AMPR  &kp SE_SLSH  &kp SE_LPRN  &kp SE_RPRN  &kp SE_EQL   &kp BSPC
+  &trans     &kp SE_EXCL  &kp SE_DQT  &kp SE_HASH  &kp SE_CURREN  &kp SE_PRCNT      &kp SE_AMPS  &kp SE_FSLH  &kp SE_LPAR  &kp SE_RPAR  &kp SE_EQUAL   &kp BSPC
   &kp LCTRL  &kp SE_N1    &kp SE_N2    &kp SE_N3    &kp SE_N4    &kp SE_N5        &kp SE_N6    &kp SE_N7    &kp SE_N8    &kp SE_N9    &kp SE_N0    &kp SE_PLUS
-  &kp LSHFT  &kp SE_AT    &kp SE_DLR   &kp SE_ASTR  &kp SE_QUES  &trans           &trans       &trans       &kp SE_SCLN  &kp SE_COLN  &kp SE_UNDS  &trans
+  &kp LSHFT  &kp SE_AT    &kp SE_DLLR   &kp SE_ASTRK  &kp SE_QMARK  &trans           &trans       &trans       &kp SE_SEMI  &kp SE_COLON  &kp SE_UNDER  &trans
                                             &trans  &trans  &kp RET      &kp SPACE  &trans  &kp RALT
             >;
         };
@@ -178,9 +175,9 @@
          */
         code_layer {
             bindings = <
-  &kp SE_GRV  &trans      &trans      &trans       &trans       &trans      &trans       &kp SE_LBRC  &kp SE_RBRC  &trans         &trans        &kp SE_TILD
-  &trans      &kp SE_AT   &kp SE_DLR  &kp SE_ASTR  &kp SE_QUES  &trans      &kp SE_PIPE  &kp SE_LCBR  &kp SE_RCBR  &trans         &trans        &kp SE_BSLS
-  &trans      &trans      &trans      &trans       &trans       &trans      &trans       &kp SE_LPRN  &kp SE_RPRN  &kp WIN_LABK   &kp WIN_RABK  &trans
+  &kp SE_GRAVE  &trans      &trans      &trans       &trans       &trans      &trans       &kp SE_LBKT  &kp SE_RBKT  &trans         &trans        &kp SE_TILDE
+  &trans      &kp SE_AT   &kp SE_DLLR  &kp SE_ASTRK  &kp SE_QMARK  &trans      &kp SE_PIPE  &kp SE_LBRC  &kp SE_RBRC  &trans         &trans        &kp SE_BSLH
+  &trans      &trans      &trans      &trans       &trans       &trans      &trans       &kp SE_LPAR  &kp SE_RPAR  &kp WIN_LT   &kp WIN_GT  &trans
                                        &trans  &mo CODE  &kp RET     &kp SPACE  &mo CODE  &trans
             >;
         };
@@ -248,7 +245,7 @@
             bindings = <
   &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans         &trans        &trans
   &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans         &trans        &trans
-  &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &kp MAC_LABK   &kp MAC_RABK  &trans
+  &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &kp MAC_LT   &kp MAC_GT  &trans
                            &trans  &trans  &trans      &trans  &trans  &trans
             >;
         };
