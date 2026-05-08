@@ -62,14 +62,14 @@
     /* ── Combos ──────────────────────────────────────────────────────────────
      * LWR + RSE held together → CODE layer
      */
-    combos {
-        compatible = "zmk,combos";
-        combo_code {
-            timeout-ms = <50>;
-            key-positions = <37 40>;
-            bindings = <&mo CODE>;
+        combos {
+            compatible = "zmk,combos";
+            combo_code {
+                timeout-ms = <50>;
+                key-positions = <41 44>;
+                bindings = <&mo CODE>;
+            };
         };
-    };
 
     /* ── Macros ──────────────────────────────────────────────────────────────
      * sw_mac: switch to BT profile 0 AND activate MAC_OVRD layer
@@ -112,10 +112,10 @@
          */
         win_base_layer {
             bindings = <
-  &kp TAB    &kp Q          &kp W          &kp E           &kp R           &kp T        &kp Y      &kp U           &kp I           &kp O          &kp P             &kp SE_A_RING
-  &kp LCTRL  &mt LGUI A     &mt LALT S     &mt LSHFT D     &mt LCTRL F     &kp G        &kp H      &mt RCTRL J     &mt RSHFT K     &mt RALT L     &mt RGUI SE_O_UMLAUT  &kp SE_A_UMLAUT
-  &kp LSHFT  &kp Z          &kp X          &kp C           &kp V           &kp B        &kp N      &kp M           &kp COMMA       &kp DOT        &kp SE_MINUS       &kp ESC
-                                            &lt SYS LGUI    &mo LOWER       &kp RET      &kp SPACE  &mo RAISE       &kp RALT
+  &kp TAB    &kp Q          &kp W          &kp E           &kp R           &kp T        &trans     &trans     &kp Y      &kp U           &kp I           &kp O          &kp P                  &kp BSPC
+  &kp LCTRL  &mt LGUI A     &mt LALT S     &mt LSHFT D     &mt LCTRL F     &kp G        &trans     &trans     &kp H      &mt RCTRL J     &mt RSHFT K     &mt RALT L     &mt RGUI SE_O_UMLAUT   &kp SE_A_UMLAUT
+  &kp LSHFT  &kp Z          &kp X          &kp C           &kp V           &kp B                                &kp N      &kp M           &kp COMMA       &kp DOT        &kp SE_MINUS            &kp ESC
+                                                              &lt SYS LGUI    &mo LOWER    &kp RET                             &kp SPACE  &mo RAISE       &kp RALT
             >;
         };
 
@@ -133,10 +133,10 @@
          */
         lower_layer {
             bindings = <
-  &trans     &kp SE_EXCL  &kp SE_DQT  &kp SE_HASH  &kp SE_CURREN  &kp SE_PRCNT      &kp SE_AMPS  &kp SE_FSLH  &kp SE_LPAR  &kp SE_RPAR  &kp SE_EQUAL   &kp BSPC
-  &kp LCTRL  &kp SE_N1    &kp SE_N2    &kp SE_N3    &kp SE_N4    &kp SE_N5        &kp SE_N6    &kp SE_N7    &kp SE_N8    &kp SE_N9    &kp SE_N0    &kp SE_PLUS
-  &kp LSHFT  &kp SE_AT    &kp SE_DLLR   &kp SE_ASTRK  &kp SE_QMARK  &trans           &trans       &trans       &kp SE_SEMI  &kp SE_COLON  &kp SE_UNDER  &trans
-                                            &trans  &trans  &kp RET      &kp SPACE  &trans  &kp RALT
+  &trans     &kp SE_N1    &kp SE_N2     &kp SE_N3     &kp SE_N4     &kp SE_N5           &trans     &trans     &kp SE_N6    &kp SE_N7    &kp SE_N8    &kp SE_N9    &kp SE_N0              &kp SE_A_RING
+  &kp LCTRL  &bt BT_SEL 0 &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4       &trans     &trans     &kp LEFT     &kp DOWN     &kp UP       &kp RIGHT    &trans                  &trans
+  &kp LSHFT  &bt BT_CLR   &rgb_ug RGB_TOG &sys_reset  &bootloader    &studio_unlock                           &trans       &trans       &trans       &trans       &trans                  &trans
+                                                              &trans         &trans        &kp RET                             &kp SPACE  &trans          &kp RALT
             >;
         };
 
@@ -154,10 +154,10 @@
          */
         raise_layer {
             bindings = <
-  &trans     &kp F1   &kp F2   &kp F3  &kp F4  &kp F5      &kp F6    &kp F7     &kp F8     &kp F9     &kp F10  &kp DEL
-  &kp LCTRL  &kp F11  &kp F12  &trans  &trans  &trans      &kp LEFT  &kp DOWN   &kp UP     &kp RIGHT  &trans   &trans
-  &kp LSHFT  &trans   &trans   &trans  &trans  &trans      &kp HOME  &kp PG_DN  &kp PG_UP  &kp END    &trans   &kp BSPC
-                                &trans  &trans  &kp RET     &kp SPACE  &trans  &kp RALT
+  &trans     &kp SE_EXCL  &kp SE_DQT   &kp SE_HASH   &kp SE_CURREN  &kp SE_PRCNT      &trans     &trans     &kp SE_CARET  &kp SE_AMPS  &kp SE_ASTRK  &kp SE_LPAR  &kp SE_RPAR          &kp SE_A_RING
+  &kp LCTRL  &kp SE_AT    &kp SE_DLLR  &kp SE_QMARK  &kp SE_FSLH    &trans            &trans     &trans     &kp SE_MINUS  &kp SE_EQUAL &kp SE_LBKT   &kp SE_RBKT  &kp SE_BSLH          &kp SE_GRAVE
+  &kp LSHFT  &trans       &trans       &trans        &trans         &trans                                    &kp SE_UNDER  &kp SE_PLUS  &kp SE_LBRC   &kp SE_RBRC  &kp SE_PIPE          &kp SE_TILDE
+                                                              &trans         &trans        &kp RET                             &kp SPACE  &trans             &kp RALT
             >;
         };
 
@@ -178,10 +178,10 @@
          */
         code_layer {
             bindings = <
-  &kp SE_GRAVE  &trans      &trans      &trans       &trans       &trans      &trans       &kp SE_LBKT  &kp SE_RBKT  &trans         &trans        &kp SE_TILDE
-  &trans      &kp SE_AT   &kp SE_DLLR  &kp SE_ASTRK  &kp SE_QMARK  &trans      &kp SE_PIPE  &kp SE_LBRC  &kp SE_RBRC  &trans         &trans        &kp SE_BSLH
-  &trans      &trans      &trans      &trans       &trans       &trans      &trans       &kp SE_LPAR  &kp SE_RPAR  &kp WIN_LT   &kp WIN_GT  &trans
-                                       &trans  &mo CODE  &kp RET     &kp SPACE  &mo CODE  &trans
+  &kp SE_GRAVE  &trans      &trans       &trans        &trans        &trans      &trans     &trans     &kp SE_LBKT  &kp SE_RBKT  &trans         &trans        &kp SE_TILDE       &trans
+  &trans        &kp SE_AT   &kp SE_DLLR  &kp SE_ASTRK  &kp SE_QMARK  &trans      &trans     &trans     &kp SE_PIPE  &kp SE_LBRC  &kp SE_RBRC   &trans        &trans             &kp SE_BSLH
+  &trans        &trans      &trans       &trans        &trans        &trans                                &trans       &kp SE_LPAR  &kp SE_RPAR   &kp WIN_LT    &kp WIN_GT         &trans
+                                                                &trans        &mo CODE      &kp RET                           &kp SPACE  &mo CODE           &trans
             >;
         };
 
@@ -203,10 +203,10 @@
          */
         sys_layer {
             bindings = <
-  &trans  &trans           &trans            &trans           &trans     &trans        &trans  &rgb_ug RGB_HUD  &rgb_ug RGB_HUI  &trans           &trans           &rgb_ug RGB_TOG
-  &trans  &studio_unlock   &ext_power EP_OFF  &ext_power EP_ON  &trans    &trans        &trans  &rgb_ug RGB_SAD  &rgb_ug RGB_SAI  &rgb_ug RGB_BRD  &rgb_ug RGB_BRI  &trans
-  &trans  &bt BT_CLR       &trans            &trans           &sw_mac    &sw_win       &trans  &rgb_ug RGB_EFR  &rgb_ug RGB_EFF  &trans           &trans           &trans
-                                              &trans  &trans  &trans      &trans  &trans  &trans
+  &trans  &trans           &trans             &trans             &trans     &trans        &trans     &trans     &rgb_ug RGB_HUD  &rgb_ug RGB_HUI  &trans           &trans           &rgb_ug RGB_TOG    &trans
+  &trans  &studio_unlock   &ext_power EP_OFF  &ext_power EP_ON   &trans     &trans        &trans     &trans     &trans           &rgb_ug RGB_SAD  &rgb_ug RGB_SAI  &rgb_ug RGB_BRD  &rgb_ug RGB_BRI    &trans
+  &trans  &bt BT_CLR       &trans             &trans             &sw_mac    &sw_win                              &trans           &rgb_ug RGB_EFR  &rgb_ug RGB_EFF  &trans           &trans             &trans
+                                                                &trans      &trans        &trans                           &trans           &trans             &trans
             >;
         };
 
@@ -246,10 +246,10 @@
          */
         mac_ovrd_layer {
             bindings = <
-  &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans         &trans        &trans
-  &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans         &trans        &trans
-  &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &kp MAC_LT   &kp MAC_GT  &trans
-                           &trans  &trans  &trans      &trans  &trans  &trans
+  &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans        &trans        &trans  &trans  &trans
+  &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans        &trans        &trans  &trans  &trans
+  &trans  &trans  &trans  &trans  &trans  &trans                      &trans  &trans        &trans        &kp MAC_LT  &kp MAC_GT  &trans
+                           &trans  &trans  &trans                      &trans  &trans        &trans
             >;
         };
 
