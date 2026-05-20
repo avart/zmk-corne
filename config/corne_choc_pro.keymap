@@ -147,7 +147,7 @@
         raise_layer {
             bindings = <
   &trans     &kp SV_EXCL    &kp SV_DQT     &kp SV_HASH     &kp SV_CURREN   &kp SV_PRCNT      &kp SV_CARET  &kp SV_AMPS  &kp SV_ASTRK  &kp SV_LPAR  &kp SV_RPAR          &kp BSPC
-  &kp ESC    &kp SV_AT      &kp SV_DLLR    &kp SV_QMARK    &kp SV_FSLH     &kp SV_BSLSH      &kp LEFT      &kp DOWN     &kp UP        &kp RIGHT    &kp SV_BSLH          &kp SV_GRAVE
+  &kp ESC    &kp SV_AT      &kp SV_DLLR    &kp SV_QMARK    &kp SV_FSLH     &kp SV_BSLH       &kp LEFT      &kp DOWN     &kp UP        &kp RIGHT    &kp SV_BSLH          &kp SV_GRAVE
   &kp LSHFT  &trans         &trans         &trans          &trans          &trans            &kp SV_UNDER  &kp SV_PLUS  &kp SV_LBRC   &kp SV_RBRC  &kp SV_PIPE          &kp SV_TILDE
                                          &trans           &trans           &kp RET           &kp SPACE    &trans             &kp RALT
             >;
