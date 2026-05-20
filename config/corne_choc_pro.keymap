@@ -130,7 +130,7 @@
             bindings = <
   &kp TAB    &kp Q          &kp W          &kp E           &kp R           &kp T             &kp Y      &kp U           &kp I           &kp O          &kp P                  &kp SV_A_RING
   &kp ESC    &mt LGUI A     &mt LALT S     &mt LSHFT D     &mt LCTRL F     &kp G             &kp H      &mt RCTRL J     &mt RSHFT K     &mt RALT L     &mt RGUI SV_O_UMLAUT   &kp SV_A_UMLAUT
-  &kp LSHFT  &kp Z          &kp X          &kp C           &kp V           &kp B             &kp N      &kp M           &kp COMMA       &kp DOT        &kp SV_MINUS           &kp BKSPC
+  &kp LSHFT  &kp Z          &kp X          &kp C           &kp V           &kp B             &kp N      &kp M           &kp COMMA       &kp DOT        &kp SV_MINUS           &kp BSPC
                                          &lt SYS LGUI      &mo LOWER       &kp RET           &kp SPACE  &mo RAISE       &kp RALT
             >;
         };
@@ -138,7 +138,7 @@
         lower_layer {
             bindings = <
   &trans     &fht F1 SV_EXCL  &fht F2 SV_DQT  &fht F3 SV_HASH  &fht F4 SV_CURREN  &fht F5 SV_PRCNT   &fht F6 SV_AMPS  &fht F7 SV_FSLH  &fht F8 SV_LPAR  &fht F9 SV_RPAR  &fht F10 SV_EQUAL      &kp SV_A_RING
-  &kp LCTRL  &fht F11 SV_N1   &fht F12 SV_N2  &kp SV_N3        &kp SV_N4          &kp SV_N5          &kp SV_N6        &kp SV_N7        &kp SV_N8       &kp SV_N9        &kp SV_N0              &kp SV_PLUS
+  &kp ESC    &fht F11 SV_N1   &fht F12 SV_N2  &kp SV_N3        &kp SV_N4          &kp SV_N5          &kp SV_N6        &kp SV_N7        &kp SV_N8       &kp SV_N9        &kp SV_N0              &kp SV_PLUS
   &kp LSHFT  &kp SV_AT        &kp SV_DLLR     &kp SV_ASTRK     &kp SV_QMARK       &kp SV_PIPE        &trans           &trans           &kp SV_SEMI     &kp SV_COLON     &kp SV_UNDER           &trans
                                            &trans            &trans            &kp RET           &kp SPACE       &trans            &kp RALT
             >;
@@ -147,7 +147,7 @@
         raise_layer {
             bindings = <
   &trans     &kp SV_EXCL    &kp SV_DQT     &kp SV_HASH     &kp SV_CURREN   &kp SV_PRCNT      &kp SV_CARET  &kp SV_AMPS  &kp SV_ASTRK  &kp SV_LPAR  &kp SV_RPAR          &kp SV_A_RING
-  &kp LCTRL  &kp SV_AT      &kp SV_DLLR    &kp SV_QMARK    &kp SV_FSLH     &trans            &kp LEFT      &kp DOWN     &kp UP        &kp RIGHT    &kp SV_BSLH          &kp SV_GRAVE
+  &kp ESC    &kp SV_AT      &kp SV_DLLR    &kp SV_QMARK    &kp SV_FSLH     &trans            &kp LEFT      &kp DOWN     &kp UP        &kp RIGHT    &kp SV_BSLH          &kp SV_GRAVE
   &kp LSHFT  &trans         &trans         &trans          &trans          &trans            &kp SV_UNDER  &kp SV_PLUS  &kp SV_LBRC   &kp SV_RBRC  &kp SV_PIPE          &kp SV_TILDE
                                          &trans           &trans           &kp RET          &kp SPACE    &trans             &kp RALT
             >;
@@ -157,7 +157,7 @@
             bindings = <
   &kp SV_GRAVE  &trans      &trans       &trans        &trans        &trans        &kp SV_LBKT  &kp SV_RBKT  &trans         &trans        &kp SV_TILDE       &trans
   &trans        &kp SV_AT   &kp SV_DLLR  &kp SV_ASTRK  &kp SV_QMARK  &kp SV_GRAVE  &kp SV_PIPE  &kp SV_LBRC  &kp SV_RBRC   &trans        &trans             &kp SV_BSLH
-  &trans        &trans      &trans       &trans        &trans        &trans        &trans       &kp SV_LPAR  &kp SV_RPAR   &kp WIN_LT    &kp WIN_GT         &kp BKSPC
+  &trans        &trans      &trans       &trans        &trans        &trans        &trans       &kp SV_LPAR  &kp SV_RPAR   &kp WIN_LT    &kp WIN_GT         &kp BSPC
                                            &trans       &mo CODE      &kp RET      &kp SPACE    &mo CODE           &trans
             >;
         };
