@@ -137,25 +137,25 @@
 
         lower_layer {
             bindings = <
-  &trans     &fht F1 SV_EXCL  &fht F2 SV_DQT  &fht F3 SV_HASH  &fht F4 SV_CURREN  &fht F5 SV_PRCNT   &fht F6 SV_AMPS  &fht F7 SV_FSLH  &fht F8 SV_LPAR  &fht F9 SV_RPAR  &fht F10 SV_EQUAL      &kp SV_A_RING
+  &trans     &fht F1 SV_EXCL  &fht F2 SV_DQT  &fht F3 SV_HASH  &fht F4 SV_CURREN  &fht F5 SV_PRCNT   &fht F6 SV_AMPS  &fht F7 SV_FSLH  &fht F8 SV_LPAR  &fht F9 SV_RPAR  &fht F10 SV_EQUAL      &kp BSPC
   &kp ESC    &fht F11 SV_N1   &fht F12 SV_N2  &kp SV_N3        &kp SV_N4          &kp SV_N5          &kp SV_N6        &kp SV_N7        &kp SV_N8       &kp SV_N9        &kp SV_N0              &kp SV_PLUS
-  &kp LSHFT  &kp SV_AT        &kp SV_DLLR     &kp SV_ASTRK     &kp SV_QMARK       &kp SV_PIPE        &trans           &trans           &kp SV_SEMI     &kp SV_COLON     &kp SV_UNDER           &trans
-                                           &trans            &trans            &kp RET           &kp SPACE       &trans            &kp RALT
+  &kp LSHFT  &kp SV_AT        &kp SV_DLLR     &kp SV_ASTRK     &kp SV_QMARK       &kp SV_PIPE        &kp SV_SQT       &kp SV_DQT       &kp SV_SEMI     &kp SV_COLON     &kp SV_UNDER           &trans
+                                              &trans            &trans            &kp RET            &kp SPACE       &trans            &kp RALT
             >;
         };
 
         raise_layer {
             bindings = <
-  &trans     &kp SV_EXCL    &kp SV_DQT     &kp SV_HASH     &kp SV_CURREN   &kp SV_PRCNT      &kp SV_CARET  &kp SV_AMPS  &kp SV_ASTRK  &kp SV_LPAR  &kp SV_RPAR          &kp SV_A_RING
-  &kp ESC    &kp SV_AT      &kp SV_DLLR    &kp SV_QMARK    &kp SV_FSLH     &trans            &kp LEFT      &kp DOWN     &kp UP        &kp RIGHT    &kp SV_BSLH          &kp SV_GRAVE
+  &trans     &kp SV_EXCL    &kp SV_DQT     &kp SV_HASH     &kp SV_CURREN   &kp SV_PRCNT      &kp SV_CARET  &kp SV_AMPS  &kp SV_ASTRK  &kp SV_LPAR  &kp SV_RPAR          &kp BSPC
+  &kp ESC    &kp SV_AT      &kp SV_DLLR    &kp SV_QMARK    &kp SV_FSLH     &kp SV_BSLSH      &kp LEFT      &kp DOWN     &kp UP        &kp RIGHT    &kp SV_BSLH          &kp SV_GRAVE
   &kp LSHFT  &trans         &trans         &trans          &trans          &trans            &kp SV_UNDER  &kp SV_PLUS  &kp SV_LBRC   &kp SV_RBRC  &kp SV_PIPE          &kp SV_TILDE
-                                         &trans           &trans           &kp RET          &kp SPACE    &trans             &kp RALT
+                                         &trans           &trans           &kp RET           &kp SPACE    &trans             &kp RALT
             >;
         };
 
         code_layer {
             bindings = <
-  &kp SV_GRAVE  &trans      &trans       &trans        &trans        &trans        &kp SV_LBKT  &kp SV_RBKT  &trans         &trans        &kp SV_TILDE       &trans
+  &kp SV_GRAVE  &trans      &trans       &trans        &trans        &trans        &kp SV_SQT   &kp SV_LBKT  &kp SV_RBKT   &trans        &kp SV_TILDE       &trans
   &trans        &kp SV_AT   &kp SV_DLLR  &kp SV_ASTRK  &kp SV_QMARK  &kp SV_GRAVE  &kp SV_PIPE  &kp SV_LBRC  &kp SV_RBRC   &trans        &trans             &kp SV_BSLH
   &trans        &trans      &trans       &trans        &trans        &trans        &trans       &kp SV_LPAR  &kp SV_RPAR   &kp WIN_LT    &kp WIN_GT         &kp BSPC
                                            &trans       &mo CODE      &kp RET      &kp SPACE    &mo CODE           &trans
