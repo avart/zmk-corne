@@ -9,7 +9,8 @@ manifest:
       url-base: https://github.com/zmkfirmware
     - name: joelspadin
       url-base: https://github.com/joelspadin
-
+    - name: urob
+      url-base: https://github.com/urob
   projects:
     - name: zmk
       remote: zmkfirmware
@@ -20,5 +21,8 @@ manifest:
       remote: joelspadin
       revision: main
 
+    - name: zmk-helpers
+      remote: urob
+      revision: v0.3.0
   self:
     path: config
