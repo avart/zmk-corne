@@ -1,4 +1,3 @@
-```dts
 /*
  * Keebart Corne Choc Pro BT with nice!view replacing the inner extra column.
  * Physical layout: 42 keys, 6 columns x 3 rows per half + 3-key thumb cluster.
@@ -242,4 +241,3 @@ ZMK_HOLD_TAP(hmr,
 
     };
 };
-```
