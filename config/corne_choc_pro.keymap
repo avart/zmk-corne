@@ -167,8 +167,8 @@ ZMK_HOLD_TAP(hmr,
        
         lower_layer {
     bindings = <
-  &trans     &fht F1 SV_EXCL  &fht F2 SV_DQT  &fht F3 SV_HASH  &fht F4 SV_CURREN  &fht F5 SV_PRCNT   &kp HOME       &kp PG_UP      &kp UP        &kp END       &kp C_MUTE       &kp C_VOL_UP
-  &kp ESC    &fht F11 SV_N1   &fht F12 SV_N2  &kp SV_N3        &kp SV_N4          &kp SV_N5          &trans         &kp LEFT       &kp DOWN     &kp RIGHT     &kp C_VOL_DN     &kp C_VOL_UP
+&trans     &kp SV_EXCL    &kp SV_HASH    &kp SV_DLLR    &kp SV_PRCNT   &kp SV_ASTRK   &kp HOME       &kp PG_UP      &kp UP        &kp END       &kp C_MUTE       &kp C_VOL_UP
+        &kp ESC    &kp SV_AT      &kp SV_UNDER   &kp SV_SQT     &kp SV_DQT     &kp SV_COLON  &trans         &kp LEFT       &kp DOWN     &kp RIGHT     &kp C_VOL_DN     &kp C_VOL_UP
   &kp LSHFT  &kp SV_AT        &kp SV_DLLR     &kp SV_ASTRK     &kp SV_QMARK       &kp SV_PIPE        &kp PG_DN       &kp INS        &kp DELETE    &trans        &trans           &trans
                                               &trans            &trans            &kp RET            &kp SPACE       &trans         &trans
     >;
@@ -177,8 +177,8 @@ ZMK_HOLD_TAP(hmr,
        
         raise_layer {
     bindings = <
-  &trans     &kp SV_EXCL    &kp SV_HASH    &kp SV_DLLR    &kp SV_PRCNT   &kp SV_ASTRK      &trans       &kp SV_N7     &kp SV_N8     &kp SV_N9     &kp SV_PLUS   &kp SV_ASTRK
-  &kp ESC    &kp SV_AT      &kp SV_UNDER   &kp SV_SQT     &kp SV_DQT     &kp SV_COLON      &trans       &kp SV_N4     &kp SV_N5     &kp SV_N6     &kp SV_MINUS  &kp SV_EQUAL
+      &trans     &fht F1 SV_EXCL  &fht F2 SV_DQT  &fht F3 SV_HASH  &fht F4 SV_CURREN  &fht F5 SV_PRCNT  &trans       &kp SV_N7     &kp SV_N8     &kp SV_N9     &kp SV_PLUS   &kp SV_ASTRK
+  &kp ESC    &fht F11 SV_N1   &fht F12 SV_N2  &kp SV_N3        &kp SV_N4          &kp SV_N5        &trans       &kp SV_N4     &kp SV_N5     &kp SV_N6     &kp SV_MINUS  &kp SV_EQUAL
   &kp LSHFT  &kp SV_BSLH    &kp SV_PIPE    &kp SV_PLUS    &kp SV_EQUAL   &kp GRAVE         &kp SV_N0      &kp SV_N1     &kp SV_N2     &kp SV_N3     &kp SV_N0     &trans
                                          &trans           &trans           &kp RET           &kp SPACE    &trans             &trans
     >;
