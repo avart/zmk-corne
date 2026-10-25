@@ -3,7 +3,4 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    # ZMK's v0.3 tag still uses Node 20 actions. This pins the reusable workflow from
-    # ZMK main (2026-07-17) with current actions; the firmware itself stays on v0.3.0
-    # via config/west.yml.
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@597d3b2d71e8549a224711c3c2d34e9707312c45
+    uses: ./.github/workflows/build-user-config.yml
