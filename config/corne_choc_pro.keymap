@@ -1,6 +1,17 @@
 /*
  * Keebart Corne Choc Pro BT with nice!view replacing the inner extra column.
  * Physical layout: 42 keys, 6 columns x 3 rows per half + 3-key thumb cluster.
+ * Host layout: macOS Swedish by default. Selecting BT profile 3 (or SYS + W) switches
+ * the symbol layers to Windows Swedish, see bt_mac/bt_win below.
+ *
+ * Legend: ▽ = transparent (falls through to BASE), ● = the key holding this layer,
+ *         two-line keys show tap on top and hold below.
+ *
+ * Key positions (see zmk-helpers/key-labels/42.h):
+ *   LT5 LT4 LT3 LT2 LT1 LT0   RT0 RT1 RT2 RT3 RT4 RT5
+ *   LM5 LM4 LM3 LM2 LM1 LM0   RM0 RM1 RM2 RM3 RM4 RM5
+ *   LB5 LB4 LB3 LB2 LB1 LB0   RB0 RB1 RB2 RB3 RB4 RB5
+ *               LH2 LH1 LH0   RH0 RH1 RH2
  */
 
 #include <behaviors.dtsi>
@@ -13,29 +24,46 @@
 #include <zmk-helpers/helper.h>
 #include <zmk-helpers/key-labels/42.h>
 
+#define BASE  0
+#define LOWER 1
+#define RAISE 2
+#define CODE  3
+#define SYS   4
+#define WIN   5  // Toggled from SYS. Activates the *_WIN overlays below.
+#define LOWER_WIN 6
+#define RAISE_WIN 7
+#define CODE_WIN  8
 
-#define WIN_BASE  0
-#define LOWER     1
-#define RAISE     2
-#define CODE      3
-#define SYS       4
-
-#define WIN_LT   SV_LT
-#define WIN_GT   SV_GT
+/*
+ * The layers below are written for macOS Swedish. A handful of symbols sit on other
+ * keys there than on Windows Swedish (the SV_* codes from zmk-locales). macOS also
+ * swaps the § and < keys on ISO keyboards. With WIN toggled on, the *_WIN overlays
+ * send the Windows codes for exactly those symbols.
+ */
 #define MAC_LT   GRAVE
 #define MAC_GT   LS(GRAVE)
-#define KEYS_L LT0 LT1 LT2 LT3 LT4 LM0 LM1 LM2 LM3 LM4 LB0 LB1 LB2 LB3 LB4  // Left-hand keys.
-#define KEYS_R RT0 RT1 RT2 RT3 RT4 RM0 RM1 RM2 RM3 RM4 RB0 RB1 RB2 RB3 RB4  // Right-hand keys.
-#define THUMBS LH2 LH1 LH0 RH0 RH1 RH2                                      // Thumb keys.
+#define MAC_SECT NON_US_BSLH
+#define MAC_PIPE RA(SV_N7)
+#define MAC_BSLH LS(RA(SV_N7))
+#define MAC_LBRC LS(RA(SV_N8))
+#define MAC_RBRC LS(RA(SV_N9))
 
-&mt {
-    flavor = "balanced";
-    tapping-term-ms = <200>;
-    quick-tap-ms = <175>;
-    require-prior-idle-ms = <150>;
-};
+/* Every key on each half, including the outer columns (Tab/Esc/Shift, Å/Ä/Bksp). */
+#define KEYS_L LT0 LT1 LT2 LT3 LT4 LT5 LM0 LM1 LM2 LM3 LM4 LM5 LB0 LB1 LB2 LB3 LB4 LB5
+#define KEYS_R RT0 RT1 RT2 RT3 RT4 RT5 RM0 RM1 RM2 RM3 RM4 RM5 RB0 RB1 RB2 RB3 RB4 RB5
+#define THUMBS LH2 LH1 LH0 RH0 RH1 RH2
 
-/* Left-hand HRMs. */
+/* ── Home row mods ──────────────────────────────────────────────────────────────────────
+ * Positional: a mod only activates when the next key is on the opposite hand (or a thumb),
+ * so same-hand rolls always type letters. To shift a right-hand letter use D, for a
+ * left-hand letter use K.
+ *
+ * Gui/Alt/Ctrl and Shift use separate behaviors. Shift is used mid-word and is often
+ * released before the shifted key (a roll), which "balanced" reads as two taps ("dm"
+ * instead of "M"). The shorter tapping term makes Shift resolve as a hold sooner.
+ */
+
+/* Left-hand Gui/Alt/Ctrl. */
 ZMK_HOLD_TAP(hml,
     flavor = "balanced";
     tapping-term-ms = <220>;
@@ -46,7 +74,7 @@ ZMK_HOLD_TAP(hml,
     hold-trigger-on-release;
 )
 
-/* Right-hand HRMs. */
+/* Right-hand Gui/Alt/Ctrl. */
 ZMK_HOLD_TAP(hmr,
     flavor = "balanced";
     tapping-term-ms = <220>;
@@ -55,6 +83,54 @@ ZMK_HOLD_TAP(hmr,
     bindings = <&kp>, <&kp>;
     hold-trigger-key-positions = <KEYS_L THUMBS>;
     hold-trigger-on-release;
+)
+
+/* Left-hand Shift (D). */
+ZMK_HOLD_TAP(hsl,
+    flavor = "balanced";
+    tapping-term-ms = <170>;
+    quick-tap-ms = <175>;
+    require-prior-idle-ms = <0>;
+    bindings = <&kp>, <&kp>;
+    hold-trigger-key-positions = <KEYS_R THUMBS>;
+    hold-trigger-on-release;
+)
+
+/* Right-hand Shift (K). */
+ZMK_HOLD_TAP(hsr,
+    flavor = "balanced";
+    tapping-term-ms = <170>;
+    quick-tap-ms = <175>;
+    require-prior-idle-ms = <0>;
+    bindings = <&kp>, <&kp>;
+    hold-trigger-key-positions = <KEYS_L THUMBS>;
+    hold-trigger-on-release;
+)
+
+/* Tap for a symbol/number, hold for an F-key (RAISE layer). */
+ZMK_HOLD_TAP(fht,
+    flavor = "tap-preferred";
+    tapping-term-ms = <220>;
+    quick-tap-ms = <150>;
+    bindings = <&kp>, <&kp>;
+)
+
+/*
+ * BT profile 1 is the Mac and profile 3 the Windows PC (numbered as on the display;
+ * BT_SEL counts from 0). Selecting either one also switches the symbol layers to
+ * that OS. The OS mode is not saved: after a restart it is Mac again, so on the
+ * Windows PC press SYS + BT 3 once (or SYS + W).
+ */
+ZMK_MACRO(bt_mac,
+    wait-ms = <0>;
+    tap-ms = <0>;
+    bindings = <&bt BT_SEL 0>, <&to BASE>;
+)
+
+ZMK_MACRO(bt_win,
+    wait-ms = <0>;
+    tap-ms = <0>;
+    bindings = <&bt BT_SEL 2>, <&to WIN>;
 )
 
 /*
@@ -72,7 +148,7 @@ ZMK_HOLD_TAP(hmr,
     >;
 };
 
- / {
+/ {
     chosen {
         zmk,physical-layout = &hybrid42_layout;
     };
@@ -130,78 +206,183 @@ ZMK_HOLD_TAP(hmr,
             ;
     };
 
-    behaviors {
-        fht: function_hold_tap {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            flavor = "tap-preferred";
-            tapping-term-ms = <220>;
-            quick-tap-ms = <150>;
-            bindings = <&kp>, <&kp>;
-            display-name = "Function Hold-Tap";
-        };
-    };
-
     combos {
         compatible = "zmk,combos";
         combo_code {
             timeout-ms = <50>;
-            key-positions = <37 40>;
+            key-positions = <LH1 RH1>;
             bindings = <&mo CODE>;
         };
+    };
+
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+        lower_win { if-layers = <WIN LOWER>; then-layer = <LOWER_WIN>; };
+        raise_win { if-layers = <WIN RAISE>; then-layer = <RAISE_WIN>; };
+        code_win  { if-layers = <WIN CODE>;  then-layer = <CODE_WIN>;  };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
-        win_base_layer {
+        /* BASE ────────────────────────────────────────────────────────────────────────────────────
+         * ╭──────┬──────┬──────┬──────┬──────┬──────╮   ╭──────┬──────┬──────┬──────┬──────┬──────╮
+         * │ Tab  │  Q   │  W   │  E   │  R   │  T   │   │  Y   │  U   │  I   │  O   │  P   │  Å   │
+         * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
+         * │ Esc  │  A   │  S   │  D   │  F   │  G   │   │  H   │  J   │  K   │  L   │  Ö   │  Ä   │
+         * │      │ Gui  │ Alt  │Shift │ Ctrl │      │   │      │ Ctrl │Shift │ Alt  │ Gui  │      │
+         * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
+         * │Shift │  Z   │  X   │  C   │  V   │  B   │   │  N   │  M   │  ,   │  .   │  -   │ Bksp │
+         * ╰──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┴──────┴──────╯
+         *                      │ Gui  │RAISE │Enter │   │Space │LOWER │ CODE │
+         *                      │ SYS  │      │      │   │      │      │      │
+         *                      ╰──────┴──────┴──────╯   ╰──────┴──────┴──────╯
+         *
+         * Hold Gui/SYS for the system layer. Combo RAISE + LOWER = CODE.
+         */
+        base_layer {
+            display-name = "Base";
             bindings = <
-  &kp TAB    &kp Q          &kp W          &kp E           &kp R           &kp T             &kp Y      &kp U           &kp I           &kp O          &kp P                  &kp SV_A_RING
-  &kp ESC    &hml LGUI A    &hml LALT S    &hml LSHFT D    &hml LCTRL F    &kp G             &kp H      &hmr RCTRL J    &hmr RSHFT K    &hmr RALT L    &hmr RGUI SV_O_UMLAUT  &kp SV_A_UMLAUT
-  &kp LSHFT  &kp Z          &kp X          &kp C           &kp V           &kp B             &kp N      &kp M           &kp COMMA       &kp DOT        &kp SV_MINUS           &kp BSPC
-                                         &lt SYS LGUI      &mo RAISE       &kp RET           &kp SPACE  &mo LOWER       &mo CODE
+  &kp TAB    &kp Q        &kp W        &kp E         &kp R         &kp T     &kp Y      &kp U         &kp I         &kp O        &kp P                  &kp SV_A_RING
+  &kp ESC    &hml LGUI A  &hml LALT S  &hsl LSHFT D  &hml LCTRL F  &kp G     &kp H      &hmr RCTRL J  &hsr RSHFT K  &hmr RALT L  &hmr RGUI SV_O_UMLAUT  &kp SV_A_UMLAUT
+  &kp LSHFT  &kp Z        &kp X        &kp C         &kp V         &kp B     &kp N      &kp M         &kp COMMA     &kp DOT      &kp SV_MINUS           &kp BSPC
+                                       &lt SYS LGUI  &mo RAISE     &kp RET   &kp SPACE  &mo LOWER     &mo CODE
             >;
         };
 
-
-       
+        /* LOWER  (symbols + navigation) ───────────────────────────────────────────────────────────
+         * ╭──────┬──────┬──────┬──────┬──────┬──────╮   ╭──────┬──────┬──────┬──────┬──────┬──────╮
+         * │  ▽   │  !   │  #   │  $   │  %   │  *   │   │ Home │ End  │  ↑   │PrtSc │ Mute │ Vol+ │
+         * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
+         * │ Esc  │  @   │  _   │  '   │  "   │  :   │   │ PgUp │  ←   │  ↓   │  →   │ Vol- │ Vol+ │
+         * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
+         * │Shift │  \   │  |   │  +   │  =   │  §   │   │ PgDn │ Ins  │ Del  │  ▽   │  ▽   │  ▽   │
+         * ╰──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┴──────┴──────╯
+         *                      │  ▽   │  ▽   │Enter │   │Space │  ●   │  ▽   │
+         *                      ╰──────┴──────┴──────╯   ╰──────┴──────┴──────╯
+         */
         lower_layer {
-    bindings = <
-  &trans     &kp SV_EXCL    &kp SV_HASH    &kp SV_DLLR    &kp SV_PRCNT &kp SV_ASTRK  &kp HOME       &kp END        &kp UP        &kp PSCRN       &kp C_MUTE       &kp C_VOL_UP
-  &kp ESC    &kp SV_AT      &kp SV_UNDER   &kp SV_SQT     &kp SV_DQT   &kp SV_COLON  &kp PG_DN      &kp LEFT       &kp DOWN      &kp RIGHT       &kp C_VOL_DN     &kp C_VOL_UP
-  &kp LSHFT  &kp SV_BSLH    &kp SV_PIPE    &kp SV_PLUS    &kp SV_EQUAL &kp GRAVE     &kp PG_DN      &kp INS        &kp DELETE    &trans          &trans           &trans
-                              &trans            &trans                 &kp RET       &kp SPACE      &trans         &trans
-    >;
-};
-
-       
-        raise_layer {
-    bindings = <
-      &trans     &fht F1 SV_EXCL  &fht F2 SV_DQT  &fht F3 SV_HASH  &fht F4 SV_CURREN  &fht F5 SV_PRCNT  &trans       &kp SV_N7     &kp SV_N8     &kp SV_N9     &kp SV_PLUS   &kp SV_ASTRK
-  &kp ESC    &fht F11 SV_N1   &fht F12 SV_N2  &kp SV_N3        &kp SV_N4          &kp SV_N5        &trans       &kp SV_N4     &kp SV_N5     &kp SV_N6     &kp SV_MINUS  &kp SV_EQUAL
-  &kp LSHFT  &kp SV_AT        &kp SV_DLLR     &kp SV_ASTRK     &kp SV_QMARK       &kp SV_PIPE         &kp SV_N0      &kp SV_N1     &kp SV_N2     &kp SV_N3     &kp SV_N0     &trans
-                                         &trans           &trans           &kp RET           &kp SPACE    &trans             &trans
-    >;
-};
-
-        
-        code_layer {
-    bindings = <
-  &kp SV_GRAVE  &kp SV_TILDE  &kp SV_HASH   &kp SV_PRCNT  &kp SV_ASTRK  &kp SV_AMPS    &trans       &trans       &kp SV_LPAR  &kp SV_RPAR  &kp WIN_LT   &kp WIN_GT
-  &kp SV_EXCL   &kp SV_QMARK  &kp SV_COLON  &kp SV_SEMI   &kp SV_FSLH   &kp SV_BSLH    &trans       &trans       &kp SV_LBKT  &kp SV_RBKT  &trans       &trans
-  &kp SV_SQT    &kp SV_DQT    &kp SV_UNDER  &kp SV_PIPE   &kp COMMA     &kp DOT        &trans       &trans       &kp SV_LBRC  &kp SV_RBRC  &trans       &kp BSPC
-                                           &trans       &trans       &kp RET        &kp SPACE    &trans           &trans
-    >;
-};
-
-        sys_layer {
+            display-name = "Lower";
             bindings = <
-  &trans  &trans           &trans             &trans             &trans     &trans        &rgb_ug RGB_HUD  &rgb_ug RGB_HUI  &trans           &trans           &rgb_ug RGB_TOG    &trans
-  &trans  &studio_unlock   &ext_power EP_OFF  &ext_power EP_ON   &trans     &trans        &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4       &trans
-  &trans  &bt BT_CLR       &trans             &trans             &trans     &to WIN_BASE  &trans           &rgb_ug RGB_EFR  &rgb_ug RGB_EFF  &trans           &trans             &trans
-                                       &trans                  &trans      &trans        &trans           &trans           &trans
+  &trans     &kp SV_EXCL   &kp SV_HASH   &kp SV_DLLR  &kp SV_PRCNT  &kp SV_ASTRK   &kp HOME   &kp END   &kp UP      &kp PSCRN  &kp C_MUTE    &kp C_VOL_UP
+  &kp ESC    &kp SV_AT     &kp SV_UNDER  &kp SV_SQT   &kp SV_DQT    &kp SV_COLON   &kp PG_UP  &kp LEFT  &kp DOWN    &kp RIGHT  &kp C_VOL_DN  &kp C_VOL_UP
+  &kp LSHFT  &kp MAC_BSLH  &kp MAC_PIPE  &kp SV_PLUS  &kp SV_EQUAL  &kp MAC_SECT   &kp PG_DN  &kp INS   &kp DELETE  &trans     &trans        &trans
+                                         &trans       &trans        &kp RET        &kp SPACE  &trans    &trans
             >;
         };
 
+        /* RAISE  (numbers + F-keys; tap = top, hold = bottom) ─────────────────────────────────────
+         * ╭──────┬──────┬──────┬──────┬──────┬──────╮   ╭──────┬──────┬──────┬──────┬──────┬──────╮
+         * │  ▽   │  !   │  "   │  #   │  ¤   │  %   │   │  ▽   │  7   │  8   │  9   │  +   │  *   │
+         * │      │  F1  │  F2  │  F3  │  F4  │  F5  │   │      │      │      │      │      │      │
+         * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
+         * │ Esc  │  1   │  2   │  3   │  4   │  5   │   │  ▽   │  4   │  5   │  6   │  -   │  =   │
+         * │      │ F11  │ F12  │      │      │      │   │      │      │      │      │      │      │
+         * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
+         * │Shift │  @   │  $   │  *   │  ?   │  |   │   │  0   │  1   │  2   │  3   │  0   │  ▽   │
+         * ╰──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┴──────┴──────╯
+         *                      │  ▽   │  ●   │Enter │   │Space │  ▽   │  ▽   │
+         *                      ╰──────┴──────┴──────╯   ╰──────┴──────┴──────╯
+         */
+        raise_layer {
+            display-name = "Raise";
+            bindings = <
+  &trans     &fht F1 SV_EXCL  &fht F2 SV_DQT  &fht F3 SV_HASH  &fht F4 SV_CURREN  &fht F5 SV_PRCNT   &trans     &kp SV_N7  &kp SV_N8  &kp SV_N9  &kp SV_PLUS   &kp SV_ASTRK
+  &kp ESC    &fht F11 SV_N1   &fht F12 SV_N2  &kp SV_N3        &kp SV_N4          &kp SV_N5          &trans     &kp SV_N4  &kp SV_N5  &kp SV_N6  &kp SV_MINUS  &kp SV_EQUAL
+  &kp LSHFT  &kp SV_AT        &kp SV_DLLR     &kp SV_ASTRK     &kp SV_QMARK       &kp MAC_PIPE       &kp SV_N0  &kp SV_N1  &kp SV_N2  &kp SV_N3  &kp SV_N0     &trans
+                                              &trans           &trans             &kp RET            &kp SPACE  &trans     &trans
+            >;
+        };
+
+        /* CODE  (programming symbols) ─────────────────────────────────────────────────────────────
+         * ╭──────┬──────┬──────┬──────┬──────┬──────╮   ╭──────┬──────┬──────┬──────┬──────┬──────╮
+         * │  `   │  ~   │  #   │  %   │  *   │  &   │   │  ▽   │  $   │  (   │  )   │  <   │  >   │
+         * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
+         * │ Esc  │  !   │  "   │  '   │  /   │  \   │   │  =   │  +   │  [   │  ]   │  ;   │  :   │
+         * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
+         * │Shift │  ?   │  _   │  |   │  ,   │  .   │   │  -   │  @   │  {   │  }   │  ▽   │ Bksp │
+         * ╰──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┴──────┴──────╯
+         *                      │  ▽   │  ▽   │Enter │   │Space │  ▽   │  ●   │
+         *                      ╰──────┴──────┴──────╯   ╰──────┴──────┴──────╯
+         *
+         * ` and ~ are dead keys on the Swedish layout: follow with Space.
+         */
+        code_layer {
+            display-name = "Code";
+            bindings = <
+  &kp SV_GRAVE  &kp SV_TILDE  &kp SV_HASH   &kp SV_PRCNT  &kp SV_ASTRK  &kp SV_AMPS    &trans        &kp SV_DLLR  &kp SV_LPAR   &kp SV_RPAR   &kp MAC_LT   &kp MAC_GT
+  &kp ESC       &kp SV_EXCL   &kp SV_DQT    &kp SV_SQT    &kp SV_FSLH   &kp MAC_BSLH   &kp SV_EQUAL  &kp SV_PLUS  &kp SV_LBKT   &kp SV_RBKT   &kp SV_SEMI  &kp SV_COLON
+  &kp LSHFT     &kp SV_QMARK  &kp SV_UNDER  &kp MAC_PIPE  &kp COMMA     &kp DOT        &kp SV_MINUS  &kp SV_AT    &kp MAC_LBRC  &kp MAC_RBRC  &trans       &kp BSPC
+                                            &trans        &trans        &kp RET        &kp SPACE     &trans       &trans
+            >;
+        };
+
+        /* SYS  (bluetooth, lighting, power) ───────────────────────────────────────────────────────
+         * ╭──────┬──────┬──────┬──────┬──────┬──────╮   ╭──────┬──────┬──────┬──────┬──────┬──────╮
+         * │  ▽   │  ▽   │ Win  │  ▽   │  ▽   │  ▽   │   │ Hue- │ Hue+ │  ▽   │  ▽   │ RGB  │  ▽   │
+         * │      │      │ mode │      │      │      │   │      │      │      │      │      │      │
+         * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
+         * │  ▽   │Studio│ExtOff│ExtOn │  ▽   │  ▽   │   │ BT 1 │ BT 2 │ BT 3 │ BT 4 │ BT 5 │  ▽   │
+         * │      │      │      │      │      │      │   │ Mac  │      │ Win  │      │      │      │
+         * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
+         * │  ▽   │BTClr │  ▽   │  ▽   │  ▽   │ Base │   │  ▽   │ Eff- │ Eff+ │  ▽   │  ▽   │  ▽   │
+         * │      │      │      │      │      │(Mac) │   │      │      │      │      │      │      │
+         * ╰──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┴──────┴──────╯
+         *                      │  ●   │  ▽   │  ▽   │   │  ▽   │  ▽   │  ▽   │
+         *                      ╰──────┴──────┴──────╯   ╰──────┴──────┴──────╯
+         */
+        sys_layer {
+            display-name = "System";
+            bindings = <
+  &trans  &trans          &tog WIN           &trans            &trans  &trans     &rgb_ug RGB_HUD  &rgb_ug RGB_HUI  &trans           &trans        &rgb_ug RGB_TOG  &trans
+  &trans  &studio_unlock  &ext_power EP_OFF  &ext_power EP_ON  &trans  &trans     &bt_mac          &bt BT_SEL 1     &bt_win          &bt BT_SEL 3  &bt BT_SEL 4     &trans
+  &trans  &bt BT_CLR      &trans             &trans            &trans  &to BASE   &trans           &rgb_ug RGB_EFR  &rgb_ug RGB_EFF  &trans        &trans           &trans
+                                             &trans            &trans  &trans     &trans           &trans           &trans
+            >;
+        };
+
+        /* Windows overlays ─────────────────────────────────────────────────────────────────────
+         * Only active while WIN is toggled on, on top of the layer they belong to. Each one
+         * swaps in the Windows code for the symbols that differ: \ | § < > { }.
+         */
+        win_layer {
+            display-name = "Base (Win)";
+            bindings = <
+  &trans  &trans  &trans  &trans  &trans  &trans   &trans  &trans  &trans  &trans  &trans  &trans
+  &trans  &trans  &trans  &trans  &trans  &trans   &trans  &trans  &trans  &trans  &trans  &trans
+  &trans  &trans  &trans  &trans  &trans  &trans   &trans  &trans  &trans  &trans  &trans  &trans
+                          &trans  &trans  &trans   &trans  &trans  &trans
+            >;
+        };
+
+        lower_win_layer {
+            display-name = "Lower";
+            bindings = <
+  &trans  &trans       &trans       &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans  &trans
+  &trans  &trans       &trans       &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans  &trans
+  &trans  &kp SV_BSLH  &kp SV_PIPE  &trans  &trans  &kp SV_SECT   &trans  &trans  &trans  &trans  &trans  &trans
+                                    &trans  &trans  &trans        &trans  &trans  &trans
+            >;
+        };
+
+        raise_win_layer {
+            display-name = "Raise";
+            bindings = <
+  &trans  &trans  &trans  &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans  &trans
+  &trans  &trans  &trans  &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans  &trans
+  &trans  &trans  &trans  &trans  &trans  &kp SV_PIPE   &trans  &trans  &trans  &trans  &trans  &trans
+                          &trans  &trans  &trans        &trans  &trans  &trans
+            >;
+        };
+
+        code_win_layer {
+            display-name = "Code";
+            bindings = <
+  &trans  &trans  &trans  &trans       &trans  &trans        &trans  &trans  &trans       &trans       &kp SV_LT  &kp SV_GT
+  &trans  &trans  &trans  &trans       &trans  &kp SV_BSLH   &trans  &trans  &trans       &trans       &trans     &trans
+  &trans  &trans  &trans  &kp SV_PIPE  &trans  &trans        &trans  &trans  &kp SV_LBRC  &kp SV_RBRC  &trans     &trans
+                          &trans       &trans  &trans        &trans  &trans  &trans
+            >;
+        };
     };
 };
