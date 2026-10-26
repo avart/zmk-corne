@@ -115,6 +115,13 @@ ZMK_HOLD_TAP(fht,
     bindings = <&kp>, <&kp>;
 )
 
+/* Backtick is a dead key on Swedish layouts; add a space so it is typed right away. */
+ZMK_MACRO(bktick,
+    wait-ms = <0>;
+    tap-ms = <0>;
+    bindings = <&kp SV_GRAVE &kp SPACE>;
+)
+
 /*
  * BT profile 1 is the Mac and profile 3 the Windows PC (numbered as on the display;
  * BT_SEL counts from 0). Selecting either one also switches the symbol layers to
@@ -273,24 +280,27 @@ ZMK_MACRO(bt_win,
 
         /* RAISE  (numbers + F-keys; tap = top, hold = bottom) ─────────────────────────────────────
          * ╭──────┬──────┬──────┬──────┬──────┬──────╮   ╭──────┬──────┬──────┬──────┬──────┬──────╮
-         * │  ▽   │  !   │  "   │  #   │  ¤   │  %   │   │  ▽   │  7   │  8   │  9   │  +   │  *   │
+         * │  ▽   │  !   │  "   │  #   │  €   │  %   │   │  ▽   │  7   │  8   │  9   │  +   │  *   │
          * │      │  F1  │  F2  │  F3  │  F4  │  F5  │   │      │      │      │      │      │      │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
-         * │ Esc  │  1   │  2   │  3   │  4   │  5   │   │  ▽   │  4   │  5   │  6   │  -   │  =   │
-         * │      │ F11  │ F12  │      │      │      │   │      │      │      │      │      │      │
+         * │ Esc  │  .   │  (   │  )   │  /   │  :   │   │  ▽   │  4   │  5   │  6   │  -   │  =   │
+         * │      │  F6  │  F7  │  F8  │  F9  │ F10  │   │      │      │      │      │      │      │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
-         * │Shift │  @   │  $   │  *   │  ?   │  |   │   │  0   │  1   │  2   │  3   │  0   │  ▽   │
+         * │Shift │  @   │  $   │  *   │  ?   │  |   │   │  0   │  1   │  2   │  3   │  ,   │  ▽   │
+         * │      │ F11  │ F12  │      │      │      │   │      │      │      │      │      │      │
          * ╰──────┴──────┴──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┴──────┴──────╯
          *                      │  ▽   │  ●   │Enter │   │Space │  ▽   │  ▽   │
          *                      ╰──────┴──────┴──────╯   ╰──────┴──────┴──────╯
+         *
+         * F4 tap is € on macOS and ¤ on Windows (both Shift+4).
          */
         raise_layer {
             display-name = "Raise";
             bindings = <
-  &trans     &fht F1 SV_EXCL  &fht F2 SV_DQT  &fht F3 SV_HASH  &fht F4 SV_CURREN  &fht F5 SV_PRCNT   &trans     &kp SV_N7  &kp SV_N8  &kp SV_N9  &kp SV_PLUS   &kp SV_ASTRK
-  &kp ESC    &fht F11 SV_N1   &fht F12 SV_N2  &kp SV_N3        &kp SV_N4          &kp SV_N5          &trans     &kp SV_N4  &kp SV_N5  &kp SV_N6  &kp SV_MINUS  &kp SV_EQUAL
-  &kp LSHFT  &kp SV_AT        &kp SV_DLLR     &kp SV_ASTRK     &kp SV_QMARK       &kp MAC_PIPE       &kp SV_N0  &kp SV_N1  &kp SV_N2  &kp SV_N3  &kp SV_N0     &trans
-                                              &trans           &trans             &kp RET            &kp SPACE  &trans     &trans
+  &trans     &fht F1 SV_EXCL  &fht F2 SV_DQT    &fht F3 SV_HASH  &fht F4 SV_CURREN  &fht F5 SV_PRCNT    &trans     &kp SV_N7  &kp SV_N8  &kp SV_N9  &kp SV_PLUS   &kp SV_ASTRK
+  &kp ESC    &fht F6 DOT      &fht F7 SV_LPAR   &fht F8 SV_RPAR  &fht F9 SV_FSLH    &fht F10 SV_COLON   &trans     &kp SV_N4  &kp SV_N5  &kp SV_N6  &kp SV_MINUS  &kp SV_EQUAL
+  &kp LSHFT  &fht F11 SV_AT   &fht F12 SV_DLLR  &kp SV_ASTRK     &kp SV_QMARK       &kp MAC_PIPE        &kp SV_N0  &kp SV_N1  &kp SV_N2  &kp SV_N3  &kp COMMA     &trans
+                                                &trans           &trans             &kp RET             &kp SPACE  &trans     &trans
             >;
         };
 
@@ -305,15 +315,15 @@ ZMK_MACRO(bt_win,
          *                      │  ▽   │  ▽   │Enter │   │Space │  ▽   │  ●   │
          *                      ╰──────┴──────┴──────╯   ╰──────┴──────┴──────╯
          *
-         * ` and ~ are dead keys on the Swedish layout: follow with Space.
+         * ` sends ` + Space, since it is a dead key on Swedish layouts.
          */
         code_layer {
             display-name = "Code";
             bindings = <
-  &kp SV_GRAVE  &kp SV_TILDE  &kp SV_HASH   &kp SV_PRCNT  &kp SV_ASTRK  &kp SV_AMPS    &trans        &kp SV_DLLR  &kp SV_LPAR   &kp SV_RPAR   &kp MAC_LT   &kp MAC_GT
-  &kp ESC       &kp SV_EXCL   &kp SV_DQT    &kp SV_SQT    &kp SV_FSLH   &kp MAC_BSLH   &kp SV_EQUAL  &kp SV_PLUS  &kp SV_LBKT   &kp SV_RBKT   &kp SV_SEMI  &kp SV_COLON
-  &kp LSHFT     &kp SV_QMARK  &kp SV_UNDER  &kp MAC_PIPE  &kp COMMA     &kp DOT        &kp SV_MINUS  &kp SV_AT    &kp MAC_LBRC  &kp MAC_RBRC  &trans       &kp BSPC
-                                            &trans        &trans        &kp RET        &kp SPACE     &trans       &trans
+  &bktick    &kp SV_TILDE  &kp SV_HASH   &kp SV_PRCNT  &kp SV_ASTRK  &kp SV_AMPS    &trans        &kp SV_DLLR  &kp SV_LPAR   &kp SV_RPAR   &kp MAC_LT   &kp MAC_GT
+  &kp ESC    &kp SV_EXCL   &kp SV_DQT    &kp SV_SQT    &kp SV_FSLH   &kp MAC_BSLH   &kp SV_EQUAL  &kp SV_PLUS  &kp SV_LBKT   &kp SV_RBKT   &kp SV_SEMI  &kp SV_COLON
+  &kp LSHFT  &kp SV_QMARK  &kp SV_UNDER  &kp MAC_PIPE  &kp COMMA     &kp DOT        &kp SV_MINUS  &kp SV_AT    &kp MAC_LBRC  &kp MAC_RBRC  &trans       &kp BSPC
+                                         &trans        &trans        &kp RET        &kp SPACE     &trans       &trans
             >;
         };
 
