@@ -286,10 +286,10 @@ ZMK_MACRO(bt_win,
 
         /* RAISE  (numbers + F-keys; tap = top, hold = bottom) ─────────────────────────────────────
          * ╭──────┬──────┬──────┬──────┬──────┬──────╮   ╭──────┬──────┬──────┬──────┬──────┬──────╮
-         * │  ▽   │  !   │  "   │  #   │  €   │  %   │   │  ▽   │  7   │  8   │  9   │  +   │  *   │
+         * │  ▽   │  !   │  "   │  #   │  €   │  %   │   │  <   │  7   │  8   │  9   │  +   │  *   │
          * │      │  F1  │  F2  │  F3  │  F4  │  F5  │   │      │      │      │      │      │      │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
-         * │ Esc  │  .   │  (   │  )   │  /   │  :   │   │  ▽   │  4   │  5   │  6   │  -   │  =   │
+         * │ Esc  │  .   │  (   │  )   │  /   │  :   │   │  >   │  4   │  5   │  6   │  -   │  =   │
          * │      │  F6  │  F7  │  F8  │  F9  │ F10  │   │      │      │      │      │      │      │
          * ├──────┼──────┼──────┼──────┼──────┼──────┤   ├──────┼──────┼──────┼──────┼──────┼──────┤
          * │Shift │  @   │  $   │  *   │  ?   │  |   │   │  0   │  1   │  2   │  3   │  ,   │  ▽   │
@@ -303,10 +303,10 @@ ZMK_MACRO(bt_win,
         raise_layer {
             display-name = "Raise";
             bindings = <
-  &trans     &fht F1 SV_EXCL  &fht F2 SV_DQT    &fht F3 SV_HASH  &fht F4 SV_CURREN  &fht F5 SV_PRCNT    &trans     &kp SV_N7  &kp SV_N8  &kp SV_N9  &kp SV_PLUS   &kp SV_ASTRK
-  &kp ESC    &fht F6 DOT      &fht F7 SV_LPAR   &fht F8 SV_RPAR  &fht F9 SV_FSLH    &fht F10 SV_COLON   &trans     &kp SV_N4  &kp SV_N5  &kp SV_N6  &kp SV_MINUS  &kp SV_EQUAL
-  &kp LSHFT  &fht F11 SV_AT   &fht F12 SV_DLLR  &kp SV_ASTRK     &kp SV_QMARK       &kp MAC_PIPE        &kp SV_N0  &kp SV_N1  &kp SV_N2  &kp SV_N3  &kp COMMA     &trans
-                                                &trans           &trans             &kp RET             &kp SPACE  &trans     &trans
+  &trans     &fht F1 SV_EXCL  &fht F2 SV_DQT    &fht F3 SV_HASH  &fht F4 SV_CURREN  &fht F5 SV_PRCNT    &kp MAC_LT  &kp SV_N7  &kp SV_N8  &kp SV_N9  &kp SV_PLUS   &kp SV_ASTRK
+  &kp ESC    &fht F6 DOT      &fht F7 SV_LPAR   &fht F8 SV_RPAR  &fht F9 SV_FSLH    &fht F10 SV_COLON   &kp MAC_GT  &kp SV_N4  &kp SV_N5  &kp SV_N6  &kp SV_MINUS  &kp SV_EQUAL
+  &kp LSHFT  &fht F11 SV_AT   &fht F12 SV_DLLR  &kp SV_ASTRK     &kp SV_QMARK       &kp MAC_PIPE        &kp SV_N0   &kp SV_N1  &kp SV_N2  &kp SV_N3  &kp COMMA     &trans
+                                                &trans           &trans             &kp RET             &kp SPACE   &trans     &trans
             >;
         };
 
@@ -384,10 +384,10 @@ ZMK_MACRO(bt_win,
         raise_win_layer {
             display-name = "Raise";
             bindings = <
-  &trans  &trans  &trans  &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans  &trans
-  &trans  &trans  &trans  &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans  &trans
-  &trans  &trans  &trans  &trans  &trans  &kp SV_PIPE   &trans  &trans  &trans  &trans  &trans  &trans
-                          &trans  &trans  &trans        &trans  &trans  &trans
+  &trans  &trans  &trans  &trans  &trans  &trans        &kp SV_LT  &trans  &trans  &trans  &trans  &trans
+  &trans  &trans  &trans  &trans  &trans  &trans        &kp SV_GT  &trans  &trans  &trans  &trans  &trans
+  &trans  &trans  &trans  &trans  &trans  &kp SV_PIPE   &trans     &trans  &trans  &trans  &trans  &trans
+                          &trans  &trans  &trans        &trans     &trans  &trans
             >;
         };
 
