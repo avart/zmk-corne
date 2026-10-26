@@ -115,11 +115,17 @@ ZMK_HOLD_TAP(fht,
     bindings = <&kp>, <&kp>;
 )
 
-/* Backtick is a dead key on Swedish layouts; add a space so it is typed right away. */
+/* Backtick and tilde are dead keys on Swedish layouts; add a space so they are typed right away. */
 ZMK_MACRO(bktick,
     wait-ms = <0>;
     tap-ms = <0>;
     bindings = <&kp SV_GRAVE &kp SPACE>;
+)
+
+ZMK_MACRO(tilde,
+    wait-ms = <0>;
+    tap-ms = <0>;
+    bindings = <&kp SV_TILDE &kp SPACE>;
 )
 
 /*
@@ -315,12 +321,12 @@ ZMK_MACRO(bt_win,
          *                      │  ▽   │  ▽   │Enter │   │Space │  ▽   │  ●   │
          *                      ╰──────┴──────┴──────╯   ╰──────┴──────┴──────╯
          *
-         * ` sends ` + Space, since it is a dead key on Swedish layouts.
+         * ` and ~ send the key + Space, since they are dead keys on Swedish layouts.
          */
         code_layer {
             display-name = "Code";
             bindings = <
-  &bktick    &kp SV_TILDE  &kp SV_HASH   &kp SV_PRCNT  &kp SV_ASTRK  &kp SV_AMPS    &trans        &kp SV_DLLR  &kp SV_LPAR   &kp SV_RPAR   &kp MAC_LT   &kp MAC_GT
+  &bktick    &tilde        &kp SV_HASH   &kp SV_PRCNT  &kp SV_ASTRK  &kp SV_AMPS    &trans        &kp SV_DLLR  &kp SV_LPAR   &kp SV_RPAR   &kp MAC_LT   &kp MAC_GT
   &kp ESC    &kp SV_EXCL   &kp SV_DQT    &kp SV_SQT    &kp SV_FSLH   &kp MAC_BSLH   &kp SV_EQUAL  &kp SV_PLUS  &kp SV_LBKT   &kp SV_RBKT   &kp SV_SEMI  &kp SV_COLON
   &kp LSHFT  &kp SV_QMARK  &kp SV_UNDER  &kp MAC_PIPE  &kp COMMA     &kp DOT        &kp SV_MINUS  &kp SV_AT    &kp MAC_LBRC  &kp MAC_RBRC  &trans       &kp BSPC
                                          &trans        &trans        &kp RET        &kp SPACE     &trans       &trans
